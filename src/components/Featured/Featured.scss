@@ -1,0 +1,36 @@
+.featured {
+    max-width: var(--width);
+    margin: auto;
+    margin-top: 89px;
+    &__list {
+        margin: 0 63px 0 63px;
+        display: flex;
+        align-items: center;
+        gap: 0 40px;
+    }
+    &__items {
+        position: relative;
+        &-thumbnail {
+            max-width: 100%;
+            object-fit: cover;
+        }
+        &-btn {
+            text-transform: uppercase;
+            border-radius: 26px;
+            position: absolute;
+            background-color: var(--white-color);
+            color: var(--primary-color);
+            font-size: 2.4rem !important;
+            font-weight: 400;
+            line-height: calc(20 / 24);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 37px;
+            &:hover {
+                border-color: var(--primary-color);
+                background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), var(--white-color);
+            }
+        }
+    }
+}

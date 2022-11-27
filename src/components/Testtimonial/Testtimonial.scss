@@ -1,0 +1,47 @@
+.testtimonial {
+    max-width: var(--width);
+    margin: auto;
+    text-align: center;
+    margin-top: 84px;
+    &__title {
+        font-size: 3.6rem;
+        font-weight: 700;
+        line-height: calc(48 / 36);
+        padding-bottom: 8px;
+    }
+    &__list {
+        max-width: 921px;
+        margin: auto;
+    }
+    &__item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 240px;
+    }
+    &__item:nth-child(1) {
+        margin-top: 130px;
+    }
+    &__item:last-child {
+        margin-bottom: 110px;
+    }
+
+    &__info {
+        text-align: left;
+        max-width: 633px;
+        margin-left: 48px;
+        &-title {
+            margin-top: 12px;
+            font-size: 2.4rem;
+            font-weight: 400;
+            line-height: calc(36 / 24);
+            color: #555;
+        }
+        &-name {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: calc(24 / 21);
+            margin-top: 32px;
+        }
+    }
+}

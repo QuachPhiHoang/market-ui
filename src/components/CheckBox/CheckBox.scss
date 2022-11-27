@@ -1,0 +1,10 @@
+.checkbox {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0 8px;
+
+    input {
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,44 @@
+.benefit {
+    width: var(--width);
+    height: 211px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 82px;
+
+    &-item {
+        width: 250px;
+        align-self: center;
+        display: flex;
+        transition: transform 0.5s ease;
+        overflow: hidden;
+        cursor: pointer;
+
+        &:hover {
+            transform: translateY(-20px);
+        }
+        &__icon {
+            width: 30px;
+            height: 28px;
+            margin-right: 22px;
+        }
+        &__title {
+            text-transform: uppercase;
+            font-size: 16px;
+            line-height: calc(25 / 16);
+            font-weight: 500;
+        }
+        &__description {
+            font-size: 16px;
+            line-height: calc(19 / 16);
+            font-weight: 400;
+            color: #555;
+        }
+    }
+    &-item:first-child {
+        margin-left: 32px;
+    }
+    &-item:last-child {
+        margin-right: 131px;
+    }
+}

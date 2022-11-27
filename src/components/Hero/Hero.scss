@@ -1,0 +1,37 @@
+.hero {
+    width: var(--width);
+    margin: auto;
+    position: relative;
+    &__image {
+        object-fit: cover;
+    }
+    &__title {
+        text-align: center;
+        width: 492px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 4.8rem;
+        line-height: calc(48 / 48);
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--white-color);
+        margin-top: 202px;
+        margin-right: 102px;
+    }
+    &__btn {
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 2.1rem;
+        line-height: calc(22 / 21);
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--white-color) !important;
+        border: solid 4px white !important;
+        max-width: 175px;
+        margin-top: 354px;
+        margin-right: 261px;
+    }
+}

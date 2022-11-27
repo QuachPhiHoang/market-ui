@@ -1,0 +1,49 @@
+.promo {
+    width: var(--width);
+    margin: auto;
+    display: flex;
+    margin-top: 37px;
+    &-item {
+        max-width: 1240px;
+        gap: 0 20px;
+        margin-left: 34px;
+        position: relative;
+        &__title {
+            width: 368px;
+            text-transform: uppercase;
+            color: var(--white-color);
+            font-size: 3.2rem;
+            line-height: calc(48 / 32);
+            font-weight: 400;
+            text-align: center;
+            position: absolute;
+            top: calc(50% - 47px);
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        &__description {
+            width: 406px;
+            color: var(--white-color);
+            font-size: 1.8rem;
+            line-height: calc(23 / 18);
+            font-weight: 400;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+    &__btn {
+        background-color: #fff;
+        font-size: 1.4rem !important;
+        font-weight: 400 !important;
+        line-height: calc(20 / 14) !important;
+        text-align: center;
+        color: var(--primary-color);
+        position: absolute;
+        top: calc(50% + 69px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}

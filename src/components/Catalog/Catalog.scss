@@ -1,0 +1,48 @@
+.catalog {
+    width: var(--width);
+    margin: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: grid;
+    grid-template-columns: 300px calc(var(--width) - 300px);
+
+    &__filter {
+        color: #555;
+        &__widget {
+            &__title {
+                font-size: 2.4rem;
+                font-weight: 700;
+                line-height: calc(36 / 24);
+                color: var(--text-color);
+                margin: 16px 8px;
+            }
+            &__content {
+                cursor: pointer;
+                font-size: 1.6rem;
+                font-weight: 400;
+                line-height: calc(19 / 16);
+                &__item {
+                    margin-top: 10px;
+                    margin-left: 16px;
+                    &:hover {
+                        opacity: 0.6;
+                    }
+                }
+                &__btn {
+                    margin-top: 16px;
+                }
+            }
+        }
+    }
+    &__content {
+        &__list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px 0;
+        }
+        &__item {
+            text-align: center;
+            cursor: pointer;
+        }
+    }
+}

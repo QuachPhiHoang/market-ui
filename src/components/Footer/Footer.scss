@@ -1,0 +1,72 @@
+.footer {
+    width: var(--width);
+    margin: auto;
+    background-color: #fbfbfb;
+
+    &-heading {
+        display: grid;
+        margin-left: 26px;
+        margin-right: 26px;
+        margin-bottom: 69px;
+        grid-template-columns: repeat(4, 1fr);
+        &__info,
+        &__helplink,
+        &__usefullink,
+        &__email {
+            margin-top: 69px;
+        }
+
+        &__info-title,
+        &__helplink-title,
+        &__usefullink-title,
+        &__email-title {
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: calc(14 / 12);
+            padding-bottom: 29px;
+        }
+
+        &__info-description,
+        &__helplink-description,
+        &__usefullink-description,
+        &__email-description {
+            text-transform: uppercase;
+            font-size: 1.6rem;
+            font-weight: 400;
+            line-height: calc(28 / 16);
+        }
+
+        &__email {
+            overflow: hidden;
+            font-size: 1.6rem;
+            input {
+                width: 295px;
+                height: 48px;
+                background-color: #fbfbfb;
+            }
+            input:focus {
+                border-bottom: 1px solid #000;
+            }
+            input::placeholder {
+                font-size: 1.6rem;
+            }
+        }
+    }
+    &-bottom {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 26px 0 26px;
+        &__policy {
+            gap: 10px 0;
+            &-info {
+                font-size: 1.4rem;
+                font-weight: 400;
+                line-height: calc(28 / 14);
+            }
+        }
+        &__payment {
+            gap: 0 16px;
+        }
+    }
+}

@@ -1,0 +1,75 @@
+@import 'normalize.css';
+
+:root {
+    --width: 1366px;
+    --primary-color: #024e82;
+    --text-color: #1d1d1d;
+    --white-color: #fff;
+}
+
+$colors: (
+    'blue': #4267b2,
+    'pink': #fe7e73,
+    'white': #fff,
+    'black': #000,
+    'red': #ff0000,
+    'yellow': #ff0,
+);
+
+@each $color, $val in $colors {
+    .color-#{$color} {
+        color: $val;
+    }
+
+    .bg-#{$color} {
+        background-color: $val;
+    }
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    text-rendering: optimizeSpeed;
+    color: var(--text-color);
+    overflow-y: overlay;
+}
+
+button,
+input,
+[tabindex] {
+    outline: none;
+    border: none;
+}
+
+a {
+    text-decoration: none !important;
+    color: var(--text-color) !important;
+}
+
+li {
+    list-style: none;
+}
+ul {
+    padding-left: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+p {
+    margin-bottom: 0 !important;
+}
+
+.container-xxl {
+    margin: 0 !important;
+    padding: 0 !important;
+}
