@@ -17,7 +17,7 @@ function NewProductItem({ data }) {
                     <div className={cx('new-product__item-image')}>
                         <img srcSet={`${data.img} 2x`} alt="img" />
                     </div>
-                    <p className={cx('new-product__item-title')}>{data.title}</p>
+                    <p className={cx('new-product__item-title')}>{data.name}</p>
                     <p className={cx('new-product__item-price')}>{`$${data.price}.00`}</p>
                 </div>
             </Link>

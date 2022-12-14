@@ -11,24 +11,20 @@ import { getProductDetail } from '~/redux/product-modal/productDetailSlice';
 const cx = classNames.bind(style);
 
 function ProductViewModal() {
-    const [content, setContent] = useState();
     const dispatch = useDispatch();
     const productId = useSelector((state) => state.productDetailSlice.productId);
-    const { products, status, error } = useSelector((state) => state.productDetailSlice);
+    const { product, status, error } = useSelector((state) => state.productDetailSlice);
 
     useEffect(() => {
-        if (productId && status === 'idle') {
+        if (productId) {
             dispatch(getProductDetail(productId));
         }
-        if (status === 'succeeded') {
-            setContent(products);
-        }
-    }, [productId, dispatch, products, content, status]);
+    }, [productId, dispatch]);
 
-    return content ? (
+    return product ? (
         <div className={cx(`product-view__modal ${productId === null ? '' : 'active'}`)}>
             <div className={cx(`product-view__modal__content ${productId === null ? '' : 'active'}`)}>
-                <ProductView products={content ? content : {}} />
+                <ProductView product={product ? product : {}} />
                 <Button
                     small
                     outline

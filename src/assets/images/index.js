@@ -16,6 +16,8 @@ const images = {
     img_productDetails_section: require('~/assets/images/img_productdetails_section.png'),
     img_productDetailsMan: require('~/assets/images/img_productdetailsMan.png'),
     cartShop: require('~/assets/images/img_cart-shop.png'),
+    profile: require('~/assets/images/profile.jpeg'),
+    page_login: require('~/assets/images/LoginPage.png'),
 };
 
 export default images;

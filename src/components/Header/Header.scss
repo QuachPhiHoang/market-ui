@@ -44,6 +44,7 @@
             }
         }
         &-menu {
+            padding: 6px;
             flex: 1;
             display: flex;
             align-items: center;
@@ -63,11 +64,17 @@
         }
         &-icon {
             display: flex;
-            margin-left: 444px;
+            margin-left: 260px;
+            margin-right: 30px;
             cursor: pointer;
             gap: 0 25px;
+            &-user {
+                padding: 6px;
+            }
             &-cart {
+                padding: 6px;
                 display: flex;
+                align-items: center;
                 position: relative;
                 &--info {
                     margin: 0;
@@ -79,8 +86,8 @@
                     border-radius: 999px;
                     font-size: 1.1rem;
                     position: absolute;
-                    top: -6px;
-                    right: -6px;
+                    top: 0;
+                    right: 0;
                 }
             }
         }

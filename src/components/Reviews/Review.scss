@@ -1,0 +1,29 @@
+.review-card {
+    display: flex;
+    align-items: flex-start;
+    & + .review-card {
+        margin-top: 32px;
+    }
+    &__img {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+    }
+    &__profile {
+        margin-left: 16px;
+        &__name {
+            color: var(--text-color);
+            font-weight: 400;
+            font-size: 2rem;
+            line-height: calc(24 / 20);
+            padding-bottom: 8px;
+        }
+        &__comment {
+            padding-top: 8px;
+            font-weight: 400;
+            font-size: 1.6rem;
+            line-height: calc(19 / 16);
+        }
+    }
+}

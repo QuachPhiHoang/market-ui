@@ -5,19 +5,18 @@ import { Link, NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Header.scss';
 import icons from '~/assets/icons';
+import Search from '~/components/Search';
 
 const itemNav = [
     { title: 'home', path: '/' },
     { title: 'about', path: '/about' },
     { title: 'contact', path: '/contact' },
-    { title: 'catalog', path: '/categories' },
+    { title: 'catalog', path: '/category' },
 ];
 
 const cx = classNames.bind(styles);
 
 function Header() {
-    const userMenu = true;
-
     const cartItems = useSelector((state) => state.cartItems.value);
     const [totalProducts, setTotalProducts] = useState(0);
 
@@ -54,11 +53,13 @@ function Header() {
                     })}
                 </div>
                 <div className={cx('header__navbar-icon')}>
-                    {userMenu && <img className={cx('header__navbar-icon-search')} src={icons.search} alt="search" />}
-                    <img className={cx('header__navbar-icon-user')} src={icons.user} alt="user" />
+                    <Search />
+                    <Link to={'/login'}>
+                        <img className={cx('header__navbar-icon-user')} src={icons.user} alt="user" />
+                    </Link>
                     <Link to={'/cart'} className={cx('header__navbar-icon-cart')}>
                         <img src={icons.cart} alt="cart" />
-                        <p className={cx('header__navbar-icon-cart--info')}>{totalProducts ? totalProducts : 0}</p>
+                        {totalProducts ? <p className={cx('header__navbar-icon-cart--info')}>{totalProducts}</p> : null}
                     </Link>
                     <img className={cx('header__navbar-icon-menu')} src={icons.menu} alt="menu" />
                 </div>

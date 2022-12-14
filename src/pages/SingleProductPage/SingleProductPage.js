@@ -1,16 +1,15 @@
 import Footer from '~/components/Footer';
 import Header from '~/components/Header';
 import ProductDetails from '~/components/ProductDetails';
-import images from '~/assets/images';
 
-function SingleProductWoman() {
+function SingleProductPage() {
     return (
         <div>
             <Header />
-            <ProductDetails image={images.img_productDetailsMan} title={'Plain T Shirt'} gender={'Man'} />
+            <ProductDetails />
             <Footer />
         </div>
     );
 }
 
-export default SingleProductWoman;
+export default SingleProductPage;

@@ -1,35 +1,59 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams, useNavigate, Link, Navigate } from 'react-router-dom';
+import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
 import classNames from 'classnames/bind';
 
 import Button from '~/components/Button';
 import CheckBox from '~/components/CheckBox';
 import styles from './Catalog.scss';
-// import NewProductItem from '~/components/NewProduct/NewProductItem';
 import categoryData from '~/fakeDataCategory';
-import ProductData from '~/fakeData';
+import { getProducts } from '~/redux/product-modal/productsSlice';
 import colorData from '~/fakeDataColor';
 import sizeData from '~/fakeDataSize';
 import genderData from '~/fakeGenderData';
 import InfinityList from '~/components/InfinityList';
+// import Pagination from 'react-js-pagination';
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
 
 const cx = classNames.bind(styles);
 
 function Catalog() {
+    const dispatch = useDispatch();
+    const [searchParams] = useSearchParams();
+    const [price, setPrice] = useState([0, 500]);
+    const [ratings, setRatings] = useState(0);
+    const navigate = useNavigate();
+
+    const Pagenow = searchParams.get('page') || 1;
+    const keyword = searchParams.get('keyword');
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const { products, productsCount, resultPerPage, filteredProductsCount } = useSelector((state) => state.products);
+    const setCurrentPageNo = (e, value) => {
+        setCurrentPage(value);
+    };
+
+    let count = filteredProductsCount;
+
+    useEffect(() => {
+        dispatch(getProducts({ keyword, currentPage: Pagenow, price, ratings }));
+    }, [dispatch, currentPage, keyword, price, ratings, Pagenow]);
+
     const initFilter = {
         category: [],
         color: [],
         size: [],
         gender: [],
     };
-
-    const productList = ProductData.ProductItem;
-    const [products, setProduct] = useState(productList);
-
+    const [product, setProduct] = useState(products);
     const [filter, setFilter] = useState(initFilter);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [products]);
+    }, [product]);
 
     const filterSelect = (type, checked, item) => {
         if (checked) {
@@ -72,7 +96,7 @@ function Catalog() {
     };
 
     const updateProduct = useCallback(() => {
-        let temp = productList;
+        let temp = products;
         if (filter.category.length > 0) {
             temp = temp.filter((e) => filter.category.includes(e.categorySlug));
         }
@@ -89,14 +113,10 @@ function Catalog() {
             });
         }
         if (filter.gender.length > 0) {
-            // temp = temp.filter((e) => {
-            //     const check = e.gender.find((gender) => filter.gender.includes(gender));
-            //     return check !== undefined;
-            // });
             temp = temp.filter((e) => filter.gender.includes(e.gender));
         }
         setProduct(temp);
-    }, [filter, productList]);
+    }, [filter, products]);
 
     useEffect(() => {
         updateProduct();
@@ -104,6 +124,14 @@ function Catalog() {
 
     const handleRemoveCheck = () => {
         setFilter(initFilter);
+        setPrice([0, 500]);
+    };
+
+    const handleChangePrice = (e, newPrice) => {
+        setPrice(newPrice);
+    };
+    const handleChangeRatings = (e, newRatings) => {
+        setRatings(newRatings);
     };
 
     return (
@@ -174,6 +202,36 @@ function Catalog() {
                     </div>
                 </div>
                 <div className={cx('catalog__filter__widget')}>
+                    <Typography className={cx('catalog__filter__widget__title')}>Category Price</Typography>
+                    <Slider
+                        className={cx('form-range')}
+                        min={0}
+                        max={500}
+                        value={price}
+                        onChange={handleChangePrice}
+                        valueLabelDisplay="auto"
+                        getAriaLabel={() => 'range-slider'}
+                        step={100}
+                        marks
+                        getAriaValueText={(price) => `${price}$`}
+                        defaultValue={0}
+                    />
+                </div>
+                <div className={cx('catalog__filter__widget')}>
+                    <Typography className={cx('catalog__filter__widget__title')}>Category Ratings</Typography>
+                    <Slider
+                        className={cx('form-range')}
+                        min={0}
+                        max={5}
+                        value={ratings}
+                        onChange={handleChangeRatings}
+                        valueLabelDisplay="auto"
+                        getAriaLabel={() => 'range-slider'}
+                        step={1}
+                        marks
+                    />
+                </div>
+                <div className={cx('catalog__filter__widget')}>
                     <div className={cx('catalog__filter__widget__content')}>
                         <Button
                             primary
@@ -186,7 +244,35 @@ function Catalog() {
                 </div>
             </div>
             <div className={cx('catalog__content')}>
-                <InfinityList data={products} />
+                <InfinityList data={product} />
+                <div className={cx('catalog__pagination')}>
+                    {resultPerPage < count ? (
+                        <Pagination
+                            page={Pagenow}
+                            count={Math.ceil(productsCount / resultPerPage)}
+                            onChange={setCurrentPageNo}
+                            defaultPage={1}
+                            siblingCount={1}
+                            renderItem={(item) => (
+                                <PaginationItem
+                                    component={Link}
+                                    to={`/category${
+                                        item.page === 1 && keyword === null
+                                            ? ''
+                                            : item.page !== 1 && keyword !== null
+                                            ? `?keyword=${keyword}&page=${item.page}`
+                                            : item.page !== 1 || keyword !== null
+                                            ? item.page
+                                                ? `?page=${item.page}`
+                                                : `?keyword=${keyword}`
+                                            : `?page=${item.page}`
+                                    }`}
+                                    {...item}
+                                />
+                            )}
+                        />
+                    ) : null}
+                </div>
             </div>
         </div>
     );

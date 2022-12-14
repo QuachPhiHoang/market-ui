@@ -1,18 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const PRODUCTS_URL = 'http://192.168.100.11:8080/api/products';
-
 const initialState = {
     products: [],
+    productsCount: null,
     status: 'idle',
     error: null,
 };
+const PRODUCTS_URL = `http://localhost:8080/api/products`;
 
-export const getProducts = createAsyncThunk('product/getProducts', async () => {
+export const getProducts = createAsyncThunk('product/getProducts', async (obj) => {
     try {
-        const response = await axios.get(PRODUCTS_URL);
-        return response.data;
+        if (Object.keys(obj).length > 0) {
+            const { data } = await axios.get(
+                `${PRODUCTS_URL}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
+                    obj.price[0]
+                }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}`,
+            );
+            return data;
+        }
+        const { data } = await axios.get(PRODUCTS_URL);
+        return data;
     } catch (error) {
         console.log(error);
     }
@@ -28,7 +36,10 @@ export const productSlice = createSlice({
         });
         builder.addCase(getProducts.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.products = action.payload;
+            state.products = action.payload.products;
+            state.productsCount = action.payload.productCount;
+            state.resultPerPage = action.payload.resultPerPage;
+            state.filteredProductsCount = action.payload.filteredProductsCount;
         });
         builder.addCase(getProducts.rejected, (state, action) => {
             state.status = 'failed';

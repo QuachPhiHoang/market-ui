@@ -14,6 +14,7 @@ $colors: (
     'black': #000,
     'red': #ff0000,
     'yellow': #ff0,
+    'green': #15ff00,
 );
 
 @each $color, $val in $colors {

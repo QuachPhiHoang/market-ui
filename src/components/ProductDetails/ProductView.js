@@ -15,7 +15,7 @@ import Button from '~/components/Button';
 
 const cx = classNames.bind(styles);
 
-function ProductView({ products }) {
+function ProductView({ product }) {
     const dispatch = useDispatch();
 
     const options = {
@@ -23,7 +23,7 @@ function ProductView({ products }) {
         edit: false,
         color: 'rgba(20,20,20,0.1)',
         activeColor: '#E6E650',
-        value: Number(products.ratings),
+        value: product.ratings ? product.ratings : 0,
         isHalf: true,
     };
 
@@ -73,11 +73,11 @@ function ProductView({ products }) {
     return (
         <div className={cx('product__details')}>
             <div className={cx('product__details__picture')}>
-                <div className={cx('product__details__sale')}>
-                    <p className={cx('product__details__sale__info')}>-24%</p>
+                <div className={cx(`product__details__sale ${Number(product.sale) === 0 ? '' : 'active'}`)}>
+                    <p className={cx('product__details__sale__info')}>{product.sale}%</p>
                 </div>
                 <div className={cx('product__details__images__main')}>
-                    <img src={products.img} alt="productDetails" />
+                    <img src={product.img} alt="productDetails" />
                 </div>
                 <div className={cx('product__details__list')}>
                     <div className={cx('product__details__list__images')}>
@@ -113,23 +113,23 @@ function ProductView({ products }) {
             <div className={cx('product__details__description')}>
                 <div className={cx('product__details__description__path')}>
                     <p className={cx('product__details__description__path__title')}>
-                        home / shop / {products.gender === 'male' ? 'Man' : 'Woman'} /<strong>{products.title}</strong>
+                        home / shop / {product.gender === 'male' ? 'Man' : 'Woman'} /<strong>{product.name}</strong>
                     </p>
                 </div>
-                <div className={cx('product__details__description__title')}>{products.title}</div>
+                <div className={cx('product__details__description__title')}>{product.name}</div>
                 <div className={cx('product__details__vote')}>
                     <ReactStars {...options} />
-                    <p className={cx('product__details__vote__quantity')}>{`(${products.numOfReviews})`}</p>
+                    <p className={cx('product__details__vote__quantity')}>{`(${product.numOfReviews})`}</p>
                 </div>
                 <div className={cx('product__details__price')}>
-                    <del className={cx('product__details__price__old')}>{`$${products.oldPrice}.00`}</del>
-                    <p className={cx('product__details__price__cur')}>{`$${products.price}.00`}</p>
+                    <del className={cx('product__details__price__old')}>{`$${product.oldPrice}.00`}</del>
+                    <p className={cx('product__details__price__cur')}>{`$${product.price}.00`}</p>
                 </div>
-                <div className={cx('product__details__description__description')}>{products.desc}</div>
+                <div className={cx('product__details__description__description')}>{product.desc}</div>
                 <div className={cx('product__details__color')}>
                     <label className={cx('product__details__color__title')}>Select Colors:</label>
-                    {products.colors &&
-                        products.colors.map((item, index) => (
+                    {product.colors &&
+                        product.colors.map((item, index) => (
                             <div
                                 key={index}
                                 className={cx(`product__details__color__list ${color === item ? 'active' : ''}`)}
@@ -148,7 +148,7 @@ function ProductView({ products }) {
                     </div>
                     {isActive && (
                         <div className={cx('product__details__size__dropdown__list')}>
-                            {products.size.map((item, index) => (
+                            {product.size.map((item, index) => (
                                 <div
                                     key={index}
                                     className={cx('product__details__size__dropdown__item')}
@@ -183,6 +183,13 @@ function ProductView({ products }) {
                             +
                         </div>
                     </div>
+                </div>
+
+                <div className={cx('product__details__stock')}>
+                    <label className={cx('product__details__stock__title')}>Status:</label>
+                    <p className={cx(`product__details__stock__info bg-${product.stock < 1 ? 'red' : 'green'}`)}>
+                        {product.stock < 1 ? 'OutOfStock' : 'InStock'}
+                    </p>
                 </div>
 
                 <div className={cx('product__details__btn')}>

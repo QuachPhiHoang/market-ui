@@ -10,11 +10,11 @@
         color: #555;
         &__widget {
             &__title {
-                font-size: 2.4rem;
-                font-weight: 700;
-                line-height: calc(36 / 24);
-                color: var(--text-color);
-                margin: 16px 8px;
+                font-size: 2.4rem !important;
+                font-weight: 700 !important;
+                line-height: calc(36 / 24) !important;
+                color: var(--text-color) !important;
+                margin: 16px 8px !important;
             }
             &__content {
                 cursor: pointer;
@@ -35,14 +35,67 @@
         }
     }
     &__content {
+        display: flex;
+        flex-direction: column;
         &__list {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 40px 0;
+            flex-shrink: 0;
         }
         &__item {
             text-align: center;
             cursor: pointer;
         }
     }
+    &__pagination {
+        margin-top: 40px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex: 1;
+        flex-direction: column;
+    }
+}
+
+.pagination {
+    --bs-pagination-font-size: 1.6rem !important;
+    --bs-pagination-font-weight: 400 !important;
+    --bs-pagination-line-height: calc(19 / 16) !important;
+    --bs-pagination-border-width: none !important;
+    --bs-pagination-bg: none !important;
+    --bs-pagination-color: #fff !important;
+    --bs-pagination-active-color: none !important;
+    --bs-pagination-focus-bg: none !important;
+}
+
+.page-item {
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.178);
+    margin-left: 20px;
+    padding: 16px 16px;
+    cursor: pointer;
+    &:hover {
+        background-color: rgb(230, 230, 230);
+    }
+    &:hover .page-link {
+        color: rgb(0, 0, 0);
+    }
+}
+
+.pageItemActive {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+}
+
+.pageLinkActive {
+    color: white !important;
+}
+
+.form-range {
+    width: 80% !important;
+    height: 0.5rem !important;
+    padding: 0;
+    background-color: transparent !important;
+    appearance: none;
 }

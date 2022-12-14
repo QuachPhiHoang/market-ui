@@ -1,0 +1,23 @@
+.login {
+    display: flex;
+    align-items: center;
+    margin: 63px 0 63px 63px;
+    &__img {
+        img {
+            height: 800px;
+            width: 712px;
+            object-fit: cover;
+        }
+    }
+    &__form {
+        background-color: #e1e1e1;
+        margin: 63px 63px 63px 0px;
+
+        height: 800px;
+        width: 712px;
+        &__brand {
+            margin-top: 80px;
+            margin-left: 127px;
+        }
+    }
+}
