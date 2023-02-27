@@ -7,6 +7,8 @@ import SingleProductPage from '~/pages/SingleProductPage';
 import CartShopping from '~/pages/CartShopping';
 import CheckOutPage from '~/pages/CheckOutPage';
 import LoginPage from '~/pages/Login';
+import RegisterPage from '~/pages/Register';
+import AccountPage from '~/pages/Account';
 
 const publicRoute = [
     { path: '/', component: HomePage },
@@ -18,6 +20,8 @@ const publicRoute = [
     { path: '/cart', component: CartShopping },
     { path: '/checkout', component: CheckOutPage },
     { path: '/login', component: LoginPage },
+    { path: '/register', component: RegisterPage },
+    { path: 'account', component: AccountPage },
 ];
 
 export { publicRoute };

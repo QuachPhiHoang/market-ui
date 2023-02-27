@@ -18,6 +18,7 @@ const images = {
     cartShop: require('~/assets/images/img_cart-shop.png'),
     profile: require('~/assets/images/profile.jpeg'),
     page_login: require('~/assets/images/LoginPage.png'),
+    logo: require('~/assets/images/logo.png'),
 };
 
 export default images;

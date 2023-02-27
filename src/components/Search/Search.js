@@ -19,8 +19,7 @@ function Search() {
     const [keyword, setKeyword] = useState('');
     const [showResult, setShowResult] = useState('false');
     const debouncedValue = useDebounced(keyword, 500);
-    const { products } = useSelector((state) => state.productSearch);
-    const [currentPage, setCurrentPage] = useState(1);
+    const { products, status, filteredProductsCount, resultPerPage } = useSelector((state) => state.productSearch);
     useEffect(() => {
         if (!debouncedValue.trim()) {
             return;
@@ -57,18 +56,22 @@ function Search() {
         <div>
             <HeadlessTippy
                 visible={showResult && keyword}
-                interactive={true}
+                interactive
+                offset={[12, 8]}
+                placement="bottom-end"
                 render={(attrs) => (
                     <div className={cx('search__result')} tabIndex="-1" {...attrs}>
                         <PopperWrapper>
-                            {products && products.length > 0 ? (
-                                products.map((item) => <SearchItem data={item} key={item._id} />)
-                            ) : (
+                            {products.length === 0 ? (
                                 <p className={cx('search__notification')}>No Products</p>
+                            ) : (
+                                products?.map((item) => <SearchItem data={item} key={item._id} />)
                             )}
-                            <div className={cx('search__all')} onClick={searchSubmitHandler}>
-                                See All Products
-                            </div>
+                            {filteredProductsCount > resultPerPage ? (
+                                <div className={cx('search__all')} onClick={searchSubmitHandler}>
+                                    See All Products
+                                </div>
+                            ) : null}
                         </PopperWrapper>
                     </div>
                 )}

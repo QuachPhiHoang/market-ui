@@ -16,7 +16,7 @@ import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 
 function ProductView({ product }) {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const options = {
         count: 5,

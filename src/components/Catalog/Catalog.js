@@ -14,7 +14,6 @@ import colorData from '~/fakeDataColor';
 import sizeData from '~/fakeDataSize';
 import genderData from '~/fakeGenderData';
 import InfinityList from '~/components/InfinityList';
-// import Pagination from 'react-js-pagination';
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 
@@ -25,11 +24,13 @@ function Catalog() {
     const [searchParams] = useSearchParams();
     const [price, setPrice] = useState([0, 500]);
     const [ratings, setRatings] = useState(0);
-    const navigate = useNavigate();
 
-    const Pagenow = searchParams.get('page') || 1;
+    const activePage = searchParams.get('page') || 1;
     const keyword = searchParams.get('keyword');
     const [currentPage, setCurrentPage] = useState(1);
+
+    const [categories, setCategories] = useState('');
+    const [gender, setGender] = useState('');
 
     const { products, productsCount, resultPerPage, filteredProductsCount } = useSelector((state) => state.products);
     const setCurrentPageNo = (e, value) => {
@@ -39,92 +40,18 @@ function Catalog() {
     let count = filteredProductsCount;
 
     useEffect(() => {
-        dispatch(getProducts({ keyword, currentPage: Pagenow, price, ratings }));
-    }, [dispatch, currentPage, keyword, price, ratings, Pagenow]);
-
-    const initFilter = {
-        category: [],
-        color: [],
-        size: [],
-        gender: [],
-    };
-    const [product, setProduct] = useState(products);
-    const [filter, setFilter] = useState(initFilter);
+        dispatch(getProducts({ keyword, currentPage: activePage, price, ratings, categories, gender }));
+    }, [dispatch, currentPage, keyword, price, ratings, activePage, categories, gender]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [product]);
-
-    const filterSelect = (type, checked, item) => {
-        if (checked) {
-            switch (type) {
-                case 'CATEGORY':
-                    setFilter({ ...filter, category: [...filter.category, item.categorySlug] });
-                    break;
-                case 'COLOR':
-                    setFilter({ ...filter, color: [...filter.color, item.color] });
-                    break;
-                case 'SIZE':
-                    setFilter({ ...filter, size: [...filter.size, item.size] });
-                    break;
-                case 'GENDER':
-                    setFilter({ ...filter, gender: [...filter.gender, item.gender] });
-                    break;
-                default:
-            }
-        } else {
-            switch (type) {
-                case 'CATEGORY':
-                    const newCategory = filter.category.filter((e) => e !== item.categorySlug);
-                    setFilter({ ...filter, category: newCategory });
-                    break;
-                case 'COLOR':
-                    const newColor = filter.color.filter((e) => e !== item.color);
-                    setFilter({ ...filter, color: newColor });
-                    break;
-                case 'SIZE':
-                    const newSize = filter.size.filter((e) => e !== item.size);
-                    setFilter({ ...filter, size: newSize });
-                    break;
-                case 'GENDER':
-                    const newGender = filter.gender.filter((e) => e !== item.gender);
-                    setFilter({ ...filter, gender: newGender });
-                    break;
-                default:
-            }
-        }
-    };
-
-    const updateProduct = useCallback(() => {
-        let temp = products;
-        if (filter.category.length > 0) {
-            temp = temp.filter((e) => filter.category.includes(e.categorySlug));
-        }
-        if (filter.color.length > 0) {
-            temp = temp.filter((e) => {
-                const check = e.colors.find((color) => filter.color.includes(color));
-                return check !== undefined;
-            });
-        }
-        if (filter.size.length > 0) {
-            temp = temp.filter((e) => {
-                const check = e.size.find((size) => filter.size.includes(size));
-                return check !== undefined;
-            });
-        }
-        if (filter.gender.length > 0) {
-            temp = temp.filter((e) => filter.gender.includes(e.gender));
-        }
-        setProduct(temp);
-    }, [filter, products]);
-
-    useEffect(() => {
-        updateProduct();
-    }, [updateProduct]);
+    }, [products]);
 
     const handleRemoveCheck = () => {
-        setFilter(initFilter);
+        setCategories('');
+        setGender('');
         setPrice([0, 500]);
+        setRatings(0);
     };
 
     const handleChangePrice = (e, newPrice) => {
@@ -132,6 +59,17 @@ function Catalog() {
     };
     const handleChangeRatings = (e, newRatings) => {
         setRatings(newRatings);
+    };
+
+    const handleChangeCategory = (e) => {
+        if (e.target.checked) {
+            setCategories(e.target.value);
+        }
+    };
+    const handleChangeGender = (e) => {
+        if (e.target.checked) {
+            setGender(e.target.value);
+        }
     };
 
     return (
@@ -142,61 +80,32 @@ function Catalog() {
                     <div className={cx('catalog__filter__widget__content')}>
                         {categoryData.map((item, index) => (
                             <div key={index} className={cx('catalog__filter__widget__content__item')}>
-                                <CheckBox
-                                    label={item.display}
-                                    onChange={(input) => {
-                                        filterSelect('CATEGORY', input.checked, item);
-                                    }}
-                                    checked={filter.category.includes(item.categorySlug)}
+                                <input
+                                    type="radio"
+                                    value={item.categorySlug}
+                                    name={item.display}
+                                    onChange={handleChangeCategory}
+                                    checked={item.categorySlug === categories}
                                 />
+                                <label>{item.display}</label>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div className={cx('catalog__filter__widget')}>
-                    <div className={cx('catalog__filter__widget__title')}>Category Color</div>
-                    <div className={cx('catalog__filter__widget__content')}>
-                        {colorData.map((item, index) => (
-                            <div key={index} className={cx('catalog__filter__widget__content__item')}>
-                                <CheckBox
-                                    label={item.display}
-                                    onChange={(input) => {
-                                        filterSelect('COLOR', input.checked, item);
-                                    }}
-                                    checked={filter.color.includes(item.color)}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className={cx('catalog__filter__widget')}>
-                    <div className={cx('catalog__filter__widget__title')}>Category Size</div>
-                    <div className={cx('catalog__filter__widget__content')}>
-                        {sizeData.map((item, index) => (
-                            <div key={index} className={cx('catalog__filter__widget__content__item')}>
-                                <CheckBox
-                                    label={item.display}
-                                    onChange={(input) => {
-                                        filterSelect('SIZE', input.checked, item);
-                                    }}
-                                    checked={filter.size.includes(item.size)}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
+
                 <div className={cx('catalog__filter__widget')}>
                     <div className={cx('catalog__filter__widget__title')}>Category Gender</div>
                     <div className={cx('catalog__filter__widget__content')}>
                         {genderData.map((item, index) => (
                             <div key={index} className={cx('catalog__filter__widget__content__item')}>
-                                <CheckBox
-                                    label={item.display}
-                                    onChange={(input) => {
-                                        filterSelect('GENDER', input.checked, item);
-                                    }}
-                                    checked={filter.gender.includes(item.gender)}
+                                <input
+                                    type="radio"
+                                    value={item.gender}
+                                    name={item.display}
+                                    onChange={handleChangeGender}
+                                    checked={item.gender === gender}
                                 />
+                                <label>{item.display}</label>
                             </div>
                         ))}
                     </div>
@@ -244,13 +153,17 @@ function Catalog() {
                 </div>
             </div>
             <div className={cx('catalog__content')}>
-                <InfinityList data={product} />
+                <InfinityList data={products} />
                 <div className={cx('catalog__pagination')}>
                     {resultPerPage < count ? (
                         <Pagination
-                            page={Pagenow}
-                            count={Math.ceil(productsCount / resultPerPage)}
+                            page={Number(activePage)}
+                            count={Math.ceil(count / resultPerPage)}
                             onChange={setCurrentPageNo}
+                            color="primary"
+                            size="large"
+                            showFirstButton
+                            showLastButton
                             defaultPage={1}
                             siblingCount={1}
                             renderItem={(item) => (
@@ -262,9 +175,9 @@ function Catalog() {
                                             : item.page !== 1 && keyword !== null
                                             ? `?keyword=${keyword}&page=${item.page}`
                                             : item.page !== 1 || keyword !== null
-                                            ? item.page
-                                                ? `?page=${item.page}`
-                                                : `?keyword=${keyword}`
+                                            ? keyword
+                                                ? `?keyword=${keyword}&page=1`
+                                                : `?page=${item.page}`
                                             : `?page=${item.page}`
                                     }`}
                                     {...item}

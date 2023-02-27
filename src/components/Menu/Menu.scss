@@ -1,0 +1,29 @@
+.menu {
+    &__item {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        margin-top: 12px;
+        padding: 0 8px;
+        &__icon {
+            width: 24px;
+            height: 24px;
+            img {
+                object-fit: cover;
+            }
+        }
+        &__title {
+            text-align: left;
+            font-size: 1.6rem;
+            font-weight: 400;
+            line-height: calc(29 / 16);
+        }
+    }
+    &__item:hover {
+        background-color: #fafafa;
+    }
+}
+
+// .wrapper + .wrapper {
+//     margin-left: 0 !important;
+// }

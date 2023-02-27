@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
+
+import { logOut } from '~/redux/user/userSlice';
 
 import classNames from 'classnames/bind';
 import styles from './Header.scss';
 import icons from '~/assets/icons';
 import Search from '~/components/Search';
+import Button from '~/components/Button';
+import Menu from '~/components/Menu';
 
 const itemNav = [
     { title: 'home', path: '/' },
@@ -17,8 +21,24 @@ const itemNav = [
 const cx = classNames.bind(styles);
 
 function Header() {
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
     const cartItems = useSelector((state) => state.cartItems.value);
     const [totalProducts, setTotalProducts] = useState(0);
+    const menu = [
+        {
+            title: 'View Profile',
+            icon: icons.user,
+            to: '/account',
+        },
+        {
+            title: 'Log Out',
+            icon: icons.logOut,
+            func: () => {
+                dispatch(logOut());
+            },
+        },
+    ];
 
     useEffect(() => {
         setTotalProducts(cartItems.reduce((arr, cur) => arr + cur.quantity, 0));
@@ -54,14 +74,32 @@ function Header() {
                 </div>
                 <div className={cx('header__navbar-icon')}>
                     <Search />
-                    <Link to={'/login'}>
-                        <img className={cx('header__navbar-icon-user')} src={icons.user} alt="user" />
-                    </Link>
-                    <Link to={'/cart'} className={cx('header__navbar-icon-cart')}>
-                        <img src={icons.cart} alt="cart" />
-                        {totalProducts ? <p className={cx('header__navbar-icon-cart--info')}>{totalProducts}</p> : null}
-                    </Link>
-                    <img className={cx('header__navbar-icon-menu')} src={icons.menu} alt="menu" />
+                    {user.isLoggedIn ? (
+                        <Link to={'/cart'} className={cx('header__navbar-icon-cart')}>
+                            <img src={icons.cart} alt="cart" />
+                            {totalProducts ? (
+                                <p className={cx('header__navbar-icon-cart--info')}>{totalProducts}</p>
+                            ) : null}
+                        </Link>
+                    ) : (
+                        <Link to={'/login'} className={cx('header__navbar-icon-cart')}>
+                            <img src={icons.cart} alt="cart" />
+                        </Link>
+                    )}
+                    {user.isLoggedIn ? (
+                        <img
+                            className={cx('header__navbar-icon-has-user')}
+                            src={user.user.user.avatar.url}
+                            alt="user"
+                        />
+                    ) : (
+                        <Link to={'/login'}>
+                            <Button primary small className={cx('header__navbar-icon-login')}>
+                                Login
+                            </Button>
+                        </Link>
+                    )}
+                    {user.isLoggedIn ? <Menu children={menu} /> : null}
                 </div>
             </div>
         </div>

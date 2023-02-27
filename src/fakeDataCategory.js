@@ -19,6 +19,10 @@ const category = [
         display: 'Áo Khoác',
         categorySlug: 'ao-khoac',
     },
+    {
+        display: 'Quần Jean',
+        categorySlug: 'quan-jean',
+    },
 ];
 
 export default category;

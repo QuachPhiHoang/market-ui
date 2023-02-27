@@ -15,6 +15,8 @@ const icons = {
     star: require('~/assets/icons/star.svg').default,
     email: require('~/assets/icons/email.svg').default,
     close: require('~/assets/icons/close.svg').default,
+    showPassword: require('~/assets/icons/showPassword.svg').default,
+    logOut: require('~/assets/icons/logout.svg').default,
 };
 
 export default icons;
