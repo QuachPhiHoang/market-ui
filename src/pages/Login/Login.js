@@ -25,8 +25,7 @@ function Login() {
     const handleShowPassword = () => {
         setValuePassword({ showPassword: !valuePassword.showPassword });
     };
-
-    const { user, isLoggedIn } = useSelector((state) => state.user);
+    const { isLoggedIn } = useSelector((state) => state.user);
 
     const goToRegister = () => {
         navigate('/register');

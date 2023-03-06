@@ -12,32 +12,32 @@ import { ToastContainer, toast } from 'react-toastify';
 const cx = classNames.bind(styles);
 
 function Register() {
-    const [avatar, setAvatar] = useState(images.profile);
-    const [avatarReview, setAvatarReview] = useState(images.profile);
-    const [valuePassword, setValuePassword] = useState({
-        showPassword: false,
-    });
-    const { isAuthenticated } = useSelector((state) => state.user);
-
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-
     const [user, setUser] = useState({
         username: '',
         password: '',
         email: '',
     });
+    const [avatar, setAvatar] = useState(images.profile);
+    const [avatarReview, setAvatarReview] = useState(images.profile);
+    const [valuePassword, setValuePassword] = useState({
+        showPassword: false,
+    });
+    const { isLoggedIn } = useSelector((state) => state.user);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     useEffect(() => {
         const handleNavigate = setTimeout(() => {
-            if (isAuthenticated) {
-                navigate('/login');
+            if (isLoggedIn) {
+                navigate('/');
             }
         }, 1000);
 
         return () => {
             clearTimeout(handleNavigate);
         };
-    }, [isAuthenticated, navigate]);
+    }, [isLoggedIn, navigate]);
 
     const { username, password, email, confirmPassword } = user;
 
@@ -70,12 +70,13 @@ function Register() {
                     setAvatar(reader.result);
                 }
             };
-            reader.readAsDataURL(e.target.files[0]);
+            if (e.target.files[0]) {
+                reader.readAsDataURL(e.target.files[0]);
+            }
         } else {
             setUser({ ...user, [e.target.name]: e.target.value });
         }
     };
-
     return (
         <div className={cx('register')}>
             <div className={cx('register__img')}>

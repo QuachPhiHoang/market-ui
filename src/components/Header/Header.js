@@ -22,9 +22,11 @@ const cx = classNames.bind(styles);
 
 function Header() {
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user);
+    const { user } = useSelector((state) => state.user);
+    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
     const cartItems = useSelector((state) => state.cartItems.value);
     const [totalProducts, setTotalProducts] = useState(0);
+    // console.log(user.user._id);
     const menu = [
         {
             title: 'View Profile',
@@ -74,7 +76,7 @@ function Header() {
                 </div>
                 <div className={cx('header__navbar-icon')}>
                     <Search />
-                    {user.isLoggedIn ? (
+                    {isLoggedIn ? (
                         <Link to={'/cart'} className={cx('header__navbar-icon-cart')}>
                             <img src={icons.cart} alt="cart" />
                             {totalProducts ? (
@@ -86,12 +88,8 @@ function Header() {
                             <img src={icons.cart} alt="cart" />
                         </Link>
                     )}
-                    {user.isLoggedIn ? (
-                        <img
-                            className={cx('header__navbar-icon-has-user')}
-                            src={user.user.user.avatar.url}
-                            alt="user"
-                        />
+                    {isLoggedIn ? (
+                        <img className={cx('header__navbar-icon-has-user')} src={user?.user?.avatar?.url} alt="user" />
                     ) : (
                         <Link to={'/login'}>
                             <Button primary small className={cx('header__navbar-icon-login')}>
@@ -99,7 +97,7 @@ function Header() {
                             </Button>
                         </Link>
                     )}
-                    {user.isLoggedIn ? <Menu children={menu} /> : null}
+                    {isLoggedIn ? <Menu children={menu} /> : null}
                 </div>
             </div>
         </div>

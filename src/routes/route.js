@@ -9,6 +9,7 @@ import CheckOutPage from '~/pages/CheckOutPage';
 import LoginPage from '~/pages/Login';
 import RegisterPage from '~/pages/Register';
 import AccountPage from '~/pages/Account';
+import UpdateProfilePage from '~/pages/UpdateProfile';
 
 const publicRoute = [
     { path: '/', component: HomePage },
@@ -21,7 +22,8 @@ const publicRoute = [
     { path: '/checkout', component: CheckOutPage },
     { path: '/login', component: LoginPage },
     { path: '/register', component: RegisterPage },
-    { path: 'account', component: AccountPage },
+    { path: '/account', component: AccountPage },
+    { path: '/update/profile', component: UpdateProfilePage },
 ];
 
 export { publicRoute };
