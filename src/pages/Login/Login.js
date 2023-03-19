@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '~/redux/user/userSlice';
 import { ToastContainer } from 'react-toastify';
@@ -25,10 +25,14 @@ function Login() {
     const handleShowPassword = () => {
         setValuePassword({ showPassword: !valuePassword.showPassword });
     };
-    const { isLoggedIn } = useSelector((state) => state.user);
+    const { isAuthenticated } = useSelector((state) => state.user);
 
     const goToRegister = () => {
         navigate('/register');
+    };
+
+    const goToForgotPassword = () => {
+        navigate('/forgot-password');
     };
 
     const handleLoginGoogle = (e) => {
@@ -42,7 +46,7 @@ function Login() {
 
     useEffect(() => {
         const handleNavigate = setTimeout(() => {
-            if (isLoggedIn) {
+            if (isAuthenticated) {
                 navigate('/');
             }
         }, 1000);
@@ -50,7 +54,7 @@ function Login() {
         return () => {
             clearTimeout(handleNavigate);
         };
-    }, [isLoggedIn, navigate]);
+    }, [isAuthenticated, navigate]);
 
     return (
         <div className={cx('login')}>
@@ -58,9 +62,9 @@ function Login() {
                 <img src={images.page_login} alt="login-page" />
             </div>
             <form className={cx('login__form')}>
-                <div className={cx('login__form__brand')}>
+                <Link className={cx('login__form__brand')} to={'/'}>
                     <img src={icons.logo} alt="brand" />
-                </div>
+                </Link>
                 <div className={cx('login__form__intro')}>Wellcome Back, Rendelle</div>
                 <div className={cx('login__form__des')}>Wellcome back! Please enter your details</div>
                 <Button outline className={cx('login__form__google')} onClick={handleLoginGoogle}>
@@ -99,7 +103,7 @@ function Login() {
                         <label>Remember for 30 days</label>
                     </div>
                     <div className={cx('login__form__checked__forgot')}>
-                        <Button small text>
+                        <Button small text onClick={goToForgotPassword}>
                             Forgot password
                         </Button>
                     </div>
@@ -109,7 +113,7 @@ function Login() {
                 </Button>
                 <div className={cx('login__form__register')}>
                     <p>Don't have accounts</p>
-                    <Button text onClick={goToRegister}>
+                    <Button text className={cx('login__form__register-btn')} onClick={goToRegister}>
                         Sign up for free
                     </Button>
                 </div>

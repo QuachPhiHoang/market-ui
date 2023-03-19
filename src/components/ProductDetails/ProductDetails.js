@@ -53,7 +53,7 @@ function ProductDetails() {
                         className={cx(`product__description__title__btn ${toggleState === 2 ? 'active' : ''}`)}
                         onClick={() => setToggleState(2)}
                     >
-                        Review({product.numOfReviews})
+                        Review({product?.numOfReviews})
                     </Button>
                 </div>
                 <div className={cx('product__description__content')}>
@@ -62,17 +62,17 @@ function ProductDetails() {
                             `product__description__content__description ${toggleState === 1 ? 'active' : ''}`,
                         )}
                     >
-                        {product.desc}
+                        {product?.desc}
                     </p>
                     <div
                         className={cx(
                             `product__description__content__description ${toggleState === 2 ? 'active' : ''}`,
                         )}
                     >
-                        {product.reviews && product.reviews[0] ? (
+                        {product?.reviews && product?.reviews[0] ? (
                             <div className={cx(`product__description__content__reviews`)}>
-                                {product.reviews &&
-                                    product.reviews.map((review) => <Reviews review={review} key={review.user._id} />)}
+                                {product?.reviews &&
+                                    product?.reviews.map((review) => <Reviews review={review} key={review?._id} />)}
                             </div>
                         ) : (
                             <p className={cx(`product__description__content__no-reviews`)}>No Reviews</p>

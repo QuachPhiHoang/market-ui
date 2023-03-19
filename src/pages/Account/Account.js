@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import icons from '~/assets/icons';
 
 import classNames from 'classnames/bind';
 import styles from './Account.scss';
@@ -12,19 +13,19 @@ function Account() {
 
     const { user, isAuthenticated } = useSelector((state) => state.user);
 
-    // console.log(user);
-
     useEffect(() => {
         if (isAuthenticated === false) {
             navigate('/login');
         }
     }, [isAuthenticated, navigate]);
+
     return (
         <div className={cx('profile')}>
-            {/* <head>
-                <meta charSet="utf-8" />
-                <title>{`${user?.user?.username} profile`}</title>
-            </head> */}
+            <div className={cx('profile__logo')}>
+                <Link className={cx('profile__image')} to="/">
+                    <img src={icons.logo} alt="logo" />
+                </Link>
+            </div>
             <div className={cx('profile__container')}>
                 <div className={cx('profile__sidebar')}>
                     <div className={cx('profile__sidebar__title')}>My Profile</div>
@@ -50,7 +51,7 @@ function Account() {
                         <Link className={cx('profile__info__myorder')} to={'/order'}>
                             My Orders
                         </Link>
-                        <Link className={cx('profile__info__updatepassword')} to={'/password/update'}>
+                        <Link className={cx('profile__info__updatepassword')} to={'/update/password'}>
                             Change PassWord
                         </Link>
                     </div>

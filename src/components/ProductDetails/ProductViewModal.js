@@ -12,8 +12,8 @@ const cx = classNames.bind(style);
 
 function ProductViewModal() {
     const dispatch = useDispatch();
-    const productId = useSelector((state) => state.productDetailSlice.productId);
-    const { product, status, error } = useSelector((state) => state.productDetailSlice);
+    // const productId = useSelector((state) => state.productDetailSlice.productId);
+    const { productId, product, status, error } = useSelector((state) => state.productDetailSlice);
 
     useEffect(() => {
         if (productId) {

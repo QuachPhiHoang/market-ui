@@ -1,10 +1,10 @@
 import ReactStars from 'react-rating-stars-component';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import withRouter from '~/hooks/withRouter';
 
-import { addItem } from '~/redux/shopping/shopping';
+import { addItemsToCart } from '~/redux/cart/cartSlice';
 
 import images from '~/assets/images';
 import icons from '~/assets/icons';
@@ -16,7 +16,7 @@ import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 
 function ProductView({ product }) {
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const options = {
         count: 5,
@@ -36,12 +36,16 @@ function ProductView({ product }) {
     const [size, setSize] = useState(undefined);
     const [quantity, setQuantity] = useState(1);
 
-    const updateQuantity = (type) => {
-        if (type === 'plus') {
-            setQuantity(quantity + 1);
-        } else {
-            setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
-        }
+    const increaseQuantity = () => {
+        if (product.stock <= quantity) return;
+        const qty = quantity + 1;
+        setQuantity(qty);
+    };
+
+    const decreaseQuantity = () => {
+        if (1 >= quantity) return;
+        const qty = quantity - 1;
+        setQuantity(qty);
     };
 
     const check = () => {
@@ -57,18 +61,19 @@ function ProductView({ product }) {
         return true;
     };
 
-    // const addToCart = () => {
-    //     if (check()) {
-    //         dispatch(addItem({ products }));
-    //     }
-    // };
+    const addToCart = () => {
+        if (check()) {
+            dispatch(addItemsToCart({ id: product._id, quantity, color, size }));
+            alert('done');
+        }
+    };
 
-    // const goToCart = () => {
-    //     if (check()) {
-    //         dispatch(addItem({ products }));
-    //         navigate('/cart');
-    //     }
-    // };
+    const goToCart = () => {
+        if (check()) {
+            dispatch(addItemsToCart({ id: product._id, quantity, color, size }));
+            navigate('/cart');
+        }
+    };
 
     return (
         <div className={cx('product__details')}>
@@ -169,17 +174,14 @@ function ProductView({ product }) {
                     <div className={cx('product__details__quantity__btn')}>
                         <div
                             className={cx('product__details__quantity__btn__minus')}
-                            onClick={() => updateQuantity('minus')}
+                            onClick={() => decreaseQuantity()}
                         >
                             -
                         </div>
                     </div>
                     <div className={cx('product__details__quantity__input')}>{quantity}</div>
                     <div className={cx('product__details__quantity__btn')}>
-                        <div
-                            className={cx('product__details__quantity__btn__plus')}
-                            onClick={() => updateQuantity('plus')}
-                        >
+                        <div className={cx('product__details__quantity__btn__plus')} onClick={() => increaseQuantity()}>
                             +
                         </div>
                     </div>
@@ -193,12 +195,10 @@ function ProductView({ product }) {
                 </div>
 
                 <div className={cx('product__details__btn')}>
-                    <Button primary className={cx('product__details__btn__add')}>
-                        {/* onClick={() => addToCart()} */}
+                    <Button primary className={cx('product__details__btn__add')} onClick={() => addToCart()}>
                         ADD TO CART
                     </Button>
-                    <Button primary className={cx('product__details__btn__buy')}>
-                        {/* onClick={() => goToCart()} */}
+                    <Button primary className={cx('product__details__btn__buy')} onClick={() => goToCart()}>
                         BUY NOW
                     </Button>
                 </div>

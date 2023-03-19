@@ -23,8 +23,8 @@ const cx = classNames.bind(styles);
 function Header() {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
-    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-    const cartItems = useSelector((state) => state.cartItems.value);
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    // const cartItems = useSelector((state) => state.cartItems.value);
     const [totalProducts, setTotalProducts] = useState(0);
     // console.log(user.user._id);
     const menu = [
@@ -42,9 +42,9 @@ function Header() {
         },
     ];
 
-    useEffect(() => {
-        setTotalProducts(cartItems.reduce((arr, cur) => arr + cur.quantity, 0));
-    }, [cartItems]);
+    // useEffect(() => {
+    //     setTotalProducts(cartItems.reduce((arr, cur) => arr + cur.quantity, 0));
+    // }, [cartItems]);
 
     return (
         <div className={cx('header')}>
@@ -76,7 +76,7 @@ function Header() {
                 </div>
                 <div className={cx('header__navbar-icon')}>
                     <Search />
-                    {isLoggedIn ? (
+                    {isAuthenticated ? (
                         <Link to={'/cart'} className={cx('header__navbar-icon-cart')}>
                             <img src={icons.cart} alt="cart" />
                             {totalProducts ? (
@@ -88,7 +88,8 @@ function Header() {
                             <img src={icons.cart} alt="cart" />
                         </Link>
                     )}
-                    {isLoggedIn ? (
+
+                    {isAuthenticated ? (
                         <img className={cx('header__navbar-icon-has-user')} src={user?.user?.avatar?.url} alt="user" />
                     ) : (
                         <Link to={'/login'}>
@@ -97,7 +98,7 @@ function Header() {
                             </Button>
                         </Link>
                     )}
-                    {isLoggedIn ? <Menu children={menu} /> : null}
+                    {isAuthenticated ? <Menu children={menu} /> : null}
                 </div>
             </div>
         </div>

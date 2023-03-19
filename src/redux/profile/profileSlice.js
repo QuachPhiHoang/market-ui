@@ -1,18 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import useAxiosInstance from '../axiosInterceptor/axiosInterceptor';
 
 const USERUPDATEPROFILE_URL = `http://localhost:8080/api/auth/update/profile`;
-const LOADUSER_URL = `http://localhost:8080/api/auth/me`;
+const USERUPDATEPASSWORD_URL = `http://localhost:8080/api/auth/update/password`;
+
 const initialState = {
     error: null,
     isUpdate: false,
-    user: {},
-    isAuthenticated: false,
-    isLoggedIn: false,
 };
 
-export const updateProfile = createAsyncThunk('user/UpdateProfile', async (myForm, { rejectWithValue }) => {
+export const updateProfile = createAsyncThunk('profile/UpdateProfile', async (myForm, { rejectWithValue }) => {
     const config = {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -21,7 +20,7 @@ export const updateProfile = createAsyncThunk('user/UpdateProfile', async (myFor
     };
     try {
         const { data } = await axios.put(USERUPDATEPROFILE_URL, myForm, config);
-        toast.success('update success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
+        toast.success('update profile success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
         return data;
     } catch (error) {
         toast.error(error.response.data.message, { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
@@ -29,19 +28,36 @@ export const updateProfile = createAsyncThunk('user/UpdateProfile', async (myFor
     }
 });
 
-export const loadUser = createAsyncThunk('user/LoadUser', async () => {
-    try {
-        const { data } = await axios.get(LOADUSER_URL);
-        return data;
-    } catch (error) {
-        return error;
-    }
-});
+export const updatePassword = createAsyncThunk(
+    'profile/UpdatePassword',
+    // async ({ password, token }, { rejectWithValue }) => {
+    async (password, { rejectWithValue }) => {
+        const axiosPrivate = useAxiosInstance();
+        // const config = {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data',
+        //         Authorization: `Bearer ${token}`,
+        //     },
+        //     withCredentials: true,
+        // };
+        try {
+            const { data } = await axiosPrivate.put('/auth/update/password', { password });
+            toast.success('update profile success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
+            return data;
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data, { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
+            return rejectWithValue(error.response.data);
+        }
+    },
+);
 
 export const profileSlice = createSlice({
-    name: 'User',
+    name: 'profile',
     initialState,
-    reducers: {},
+    reducers: {
+        reset: () => initialState,
+    },
     extraReducers: (builder) => {
         builder.addCase(updateProfile.pending, (state, action) => {
             state.status = 'loading';
@@ -49,34 +65,28 @@ export const profileSlice = createSlice({
         });
         builder.addCase(updateProfile.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.isUpdate = true;
+            state.isUpdate = action.payload.success;
         });
         builder.addCase(updateProfile.rejected, (state, action) => {
             state.status = 'failed';
             state.error = action.payload;
             state.isUpdate = false;
         });
-        builder.addCase(loadUser.pending, (state, action) => {
+        builder.addCase(updatePassword.pending, (state, action) => {
             state.status = 'loading';
-            state.user = {};
             state.isUpdate = false;
-            state.isAuthenticated = false;
         });
-        builder.addCase(loadUser.fulfilled, (state, action) => {
+        builder.addCase(updatePassword.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.user = action.payload;
-            state.isAuthenticated = true;
-            state.isLoggedIn = true;
-            state.error = null;
+            state.isUpdate = action.payload.success;
         });
-        builder.addCase(loadUser.rejected, (state, action) => {
+        builder.addCase(updatePassword.rejected, (state, action) => {
             state.status = 'failed';
             state.error = action.payload;
             state.isUpdate = false;
-            state.isAuthenticated = false;
-            state.isLoggedIn = false;
         });
     },
 });
+export const { reset } = profileSlice.actions;
 
 export default profileSlice.reducer;

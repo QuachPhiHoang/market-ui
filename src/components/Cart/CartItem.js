@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import icons from '~/assets/icons';
 import styles from './Cart.scss';
-import { updateItem, removeItem } from '~/redux/shopping/shopping';
+// import { updateItem, removeItem } from '~/redux/shopping/shopping';
+import { removeItemsFromCart } from '~/redux/cart/cartSlice';
 
 const cx = classNames.bind(styles);
 
@@ -11,55 +12,79 @@ const totalPrice = (quantity, price) => {
     const Total = quantity * price;
     return Total;
 };
-function CartItem({ ...props }) {
+function CartItem({ product }) {
     const dispatch = useDispatch();
-    const [product, setProduct] = useState(props.data);
-    const [quantity, setQuantity] = useState(props.data.quantity);
+    const [products, setProducts] = useState(product);
+    // console.log(product);
+    const [quantity, setQuantity] = useState(product.quantity);
     const quantityPrice = totalPrice(product.quantity, product.price);
+    // console.log(product);
 
     useEffect(() => {
-        setProduct(props.data);
-        setQuantity(props.data.quantity);
-    }, [props.data]);
+        setProducts(product);
+        setQuantity(product.quantity);
+    }, [product]);
 
-    const updateQuantity = (opt) => {
-        if (opt === 'plus') {
-            dispatch(updateItem({ ...props.data, quantity: quantity + 1 }));
-        }
-        if (opt === 'minus') {
-            dispatch(updateItem({ ...props.data, quantity: quantity - 1 === 0 ? 1 : quantity - 1 }));
-        }
+    // const updateQuantity = (opt) => {
+    //     if (opt === 'plus') {
+    //         dispatch(updateItem({ ...props.data, quantity: quantity + 1 }));
+    //     }
+    //     if (opt === 'minus') {
+    //         dispatch(updateItem({ ...props.data, quantity: quantity - 1 === 0 ? 1 : quantity - 1 }));
+    //     }
+    // };
+
+    const increaseQuantity = () => {
+        if (product.stock <= quantity) return;
+        const qty = quantity + 1;
+        setQuantity(qty);
+    };
+
+    const decreaseQuantity = () => {
+        if (1 >= quantity) return;
+        const qty = quantity - 1;
+        setQuantity(qty);
     };
 
     const removeItems = () => {
-        dispatch(removeItem({ ...props.data }));
+        try {
+            dispatch(removeItemsFromCart(product.product));
+            console.log('Item removed successfully!');
+        } catch (error) {
+            console.log(`Failed to remove item: ${error}`);
+        }
     };
 
     return (
         <table>
             <tbody>
-                <tr className={cx('cart__table__row')}>
-                    <td className={cx('cart__table__remove__icon')} onClick={() => removeItems()}>
-                        <img src={icons.close} alt="close" />
-                    </td>
-                    <td className={cx('cart__table__product__details')}>
-                        <img className={cx('cart__table__product__image')} src={product.product.img} alt="cart-shop" />
-                        <p
-                            className={cx('cart__table__product__name')}
-                        >{`${product.product.title} - (${product.size} - ${product.color})`}</p>
-                    </td>
-                    <td className={cx('cart__table__price__details')}>{`$${product.product.price}.00`}</td>
-                    <td className={cx('cart__table__quantity__details')}>
-                        <div className={cx('cart__table__quantity__minus')} onClick={() => updateQuantity('minus')}>
-                            -
-                        </div>
-                        <p className={cx('cart__table__quantity__info')}>{quantity}</p>
-                        <div className={cx('cart__table__quantity__plus')} onClick={() => updateQuantity('plus')}>
-                            +
-                        </div>
-                    </td>
-                    <td className={cx('cart__table__total__details')}>{`$${quantityPrice}.00`}</td>
-                </tr>
+                {products ? (
+                    <tr className={cx('cart__table__row')}>
+                        <td className={cx('cart__table__remove__icon')} onClick={() => removeItems()}>
+                            <img src={icons.close} alt="close" />
+                        </td>
+                        <td className={cx('cart__table__product__details')}>
+                            <img className={cx('cart__table__product__image')} src={product?.image} alt="cart-shop" />
+                            <p
+                                className={cx('cart__table__product__name')}
+                            >{`${product?.name} - (${product?.size} - ${product?.color})`}</p>
+                        </td>
+                        <td className={cx('cart__table__price__details')}>{`$${product?.price}.00`}</td>
+                        <td className={cx('cart__table__quantity__details')}>
+                            <div
+                                className={cx('cart__table__quantity__minus')}
+                                onClick={() => decreaseQuantity('minus')}
+                            >
+                                -
+                            </div>
+                            <p className={cx('cart__table__quantity__info')}>{quantity}</p>
+                            <div className={cx('cart__table__quantity__plus')} onClick={() => increaseQuantity()}>
+                                +
+                            </div>
+                        </td>
+                        <td className={cx('cart__table__total__details')}>{`$${quantityPrice}.00`}</td>
+                    </tr>
+                ) : null}
             </tbody>
         </table>
     );

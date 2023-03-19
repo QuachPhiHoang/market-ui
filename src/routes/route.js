@@ -10,6 +10,9 @@ import LoginPage from '~/pages/Login';
 import RegisterPage from '~/pages/Register';
 import AccountPage from '~/pages/Account';
 import UpdateProfilePage from '~/pages/UpdateProfile';
+import UpdatePassWordPage from '~/pages/UpdatePassWord';
+import ForgotPasswordPage from '~/pages/ForgotPassword';
+import ResetPasswordPage from '~/pages/ResetPasswordPage';
 
 const publicRoute = [
     { path: '/', component: HomePage },
@@ -24,6 +27,9 @@ const publicRoute = [
     { path: '/register', component: RegisterPage },
     { path: '/account', component: AccountPage },
     { path: '/update/profile', component: UpdateProfilePage },
+    { path: '/update/password', component: UpdatePassWordPage },
+    { path: 'forgot-password', component: ForgotPasswordPage },
+    { path: 'password/reset/:token', component: ResetPasswordPage },
 ];
 
 export { publicRoute };

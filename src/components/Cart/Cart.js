@@ -10,10 +10,7 @@ import CartItem from './CartItem';
 const cx = classNames.bind(styles);
 
 function Cart() {
-    const cartItems = useSelector((state) => state.CartItem.value);
-
-    const [cartProducts, setCartProducts] = useState([]);
-
+    const { cartItems } = useSelector((state) => state.cart);
     const [totalProducts, setTotalProducts] = useState(0);
 
     const [totalPrice, setTotalPrice] = useState(0);
@@ -21,11 +18,9 @@ function Cart() {
     const navigate = useNavigate();
 
     const backToCatalog = () => {
-        navigate('/categories');
+        navigate('/category');
     };
-
     useEffect(() => {
-        setCartProducts(fakeData.getCartItemsDetails(cartItems));
         setTotalProducts(cartItems.reduce((arr, cur) => arr + cur.quantity, 0));
         setTotalPrice(cartItems.reduce((arr, cur) => arr + cur.quantity * cur.price, 0));
     }, [cartItems]);
@@ -52,14 +47,13 @@ function Cart() {
                         </tr>
                     </tbody>
                 </table>
-                {cartProducts.map((item, index) => (
-                    <CartItem key={index} data={item} />
-                ))}
+                {cartItems && cartItems.map((item, index) => <CartItem key={index} product={item} />)}
             </div>
             <div className={cx('cart__coupon')}>
                 <p className={cx('cart__coupon__title')}>Cart Totals</p>
                 <div className={cx('cart__coupon__subtotal')}>
                     <p className={cx('cart__coupon__subtotal__title')}>{`Subtotal: ${totalProducts} items`}</p>
+
                     <p className={cx('cart__coupon__subtotal__price')}>{`$${totalPrice}.00`}</p>
                 </div>
                 <div className={cx('cart__coupon__shipping')}>

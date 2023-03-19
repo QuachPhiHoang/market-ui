@@ -22,14 +22,14 @@ function Register() {
     const [valuePassword, setValuePassword] = useState({
         showPassword: false,
     });
-    const { isLoggedIn } = useSelector((state) => state.user);
+    const { isAuthenticated } = useSelector((state) => state.user);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         const handleNavigate = setTimeout(() => {
-            if (isLoggedIn) {
+            if (isAuthenticated) {
                 navigate('/');
             }
         }, 1000);
@@ -37,7 +37,7 @@ function Register() {
         return () => {
             clearTimeout(handleNavigate);
         };
-    }, [isLoggedIn, navigate]);
+    }, [isAuthenticated, navigate]);
 
     const { username, password, email, confirmPassword } = user;
 
