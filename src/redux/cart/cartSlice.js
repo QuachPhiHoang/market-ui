@@ -1,8 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-
-const GETPRODUCT_URL = 'http://localhost:8080/api/products/find/';
+import axiosInstance from '~/service/axiosInterceptor';
 
 const initialState = {
     cartItems: [],
@@ -12,7 +9,7 @@ const initialState = {
 
 export const addItemsToCart = createAsyncThunk('addItem/Cart', async (obj, ThunkAPI) => {
     try {
-        const { data } = await axios.get(`${GETPRODUCT_URL}${obj.id}`);
+        const { data } = await axiosInstance.get(`${'products/find/'}${obj.id}`);
         const cart = ThunkAPI.dispatch(
             addToCart({
                 product: data._id,
@@ -29,7 +26,6 @@ export const addItemsToCart = createAsyncThunk('addItem/Cart', async (obj, Thunk
         localStorage.setItem('cartItems', JSON.stringify(ThunkAPI.getState().cart.cartItems));
         return cart;
     } catch (error) {
-        console.log(error.response.data.message);
         return ThunkAPI.rejectWithValue(error.response.data.message);
     }
 });
@@ -40,7 +36,16 @@ export const removeItemsFromCart = createAsyncThunk('removeItem/Cart', async (id
         localStorage.setItem('cartItems', JSON.stringify(ThunkAPI.getState().cart.cartItems));
         return data;
     } catch (error) {
-        console.log(error.response.data.message);
+        return ThunkAPI.rejectWithValue(error.response.data.message);
+    }
+});
+
+export const updateItemsFromCart = createAsyncThunk('updateItem/Cart', async (obj, ThunkAPI) => {
+    try {
+        const { data } = ThunkAPI.dispatch(updateFromCart({ obj }));
+        localStorage.setItem('cartItems', JSON.stringify(ThunkAPI.getState().cart.cartItems));
+        return data;
+    } catch (error) {
         return ThunkAPI.rejectWithValue(error.response.data.message);
     }
 });
@@ -51,7 +56,9 @@ export const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action) => {
             const items = action.payload;
-            const isItemExits = state.cartItems.find((i) => i.product === items.product && i.size && i.color);
+            const isItemExits = state.cartItems.find(
+                (i) => i.product === items.product && i.size === items.size && i.color === items.color,
+            );
             if (isItemExits) {
                 return {
                     ...state,
@@ -69,11 +76,34 @@ export const cartSlice = createSlice({
         removeFromCart: (state, action) => {
             return {
                 ...state,
-                cartItems: state.cartItems.filter((i) => i.product !== action.payload),
+                cartItems: state.cartItems.filter(
+                    (i) =>
+                        i.product !== action.payload.product ||
+                        i.size !== action.payload.size ||
+                        i.color !== action.payload.color,
+                ),
             };
         },
+        updateFromCart: (state, action) => {
+            const itemUpdate = action.payload.obj.products;
+            const check = state.cartItems.find(
+                (i) => i.product === itemUpdate.product && i.size === itemUpdate.size && i.color === itemUpdate.color,
+            );
+            if (check) {
+                return {
+                    ...state,
+                    cartItems: state.cartItems.map((items) =>
+                        items.product === check.product && items.size === check.size && items.color === check.color
+                            ? {
+                                  ...itemUpdate,
+                                  quantity: action.payload.obj.newQuantity,
+                              }
+                            : items,
+                    ),
+                };
+            }
+        },
     },
-    extraReducers: (builder) => {},
 });
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateFromCart } = cartSlice.actions;
 export default cartSlice.reducer;

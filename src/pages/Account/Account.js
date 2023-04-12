@@ -48,7 +48,7 @@ function Account() {
                         <p>{user?.user?.createdAt.substring(0, 10)}</p>
                     </div>
                     <div className={cx('profile__info__buy')}>
-                        <Link className={cx('profile__info__myorder')} to={'/order'}>
+                        <Link className={cx('profile__info__myorder')} to={'/orders'}>
                             My Orders
                         </Link>
                         <Link className={cx('profile__info__updatepassword')} to={'/update/password'}>

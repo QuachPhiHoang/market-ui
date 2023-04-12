@@ -9,13 +9,12 @@ import Button from '~/components/Button';
 const cx = classNames.bind(styles);
 function NewProductItem({ data }) {
     const dispatch = useDispatch();
-
     return (
         <div>
             <Link to={`/categories/${data._id}`}>
                 <div className={cx('new-product__item')}>
                     <div className={cx('new-product__item-image')}>
-                        <img srcSet={`${data.img} 2x`} alt="img" />
+                        <img srcSet={`${data.img[0].url} 2x`} alt="item" />
                     </div>
                     <p className={cx('new-product__item-title')}>{data.name}</p>
                     <p className={cx('new-product__item-price')}>{`$${data.price}.00`}</p>

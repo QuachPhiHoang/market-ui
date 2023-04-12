@@ -10,7 +10,7 @@ function SearchItem({ data }) {
             <Link to={`categories/${data._id}`}>
                 <div className={cx('search__item')}>
                     <div className={cx('search__item__img')}>
-                        <img src={data.img} alt={data.name} />
+                        <img src={data.img[0].url} alt={data.name} />
                     </div>
                     <p className={cx('search__item__name')}>{data.name}</p>
                 </div>

@@ -1,0 +1,176 @@
+.order-details {
+    width: var(--width);
+    margin: auto;
+    margin-top: 40px;
+    &__heading {
+        font-size: 3.6rem;
+        font-weight: 700;
+        line-height: calc(49 / 36);
+        margin-left: 30px;
+    }
+    &__container {
+        margin-left: 50px;
+        margin-top: 30px;
+        &__shipping-info {
+            margin-bottom: 30px;
+            &__title {
+                font-size: 2.4rem;
+                font-weight: 500;
+                line-height: calc(36 / 24);
+                margin-top: 12px;
+            }
+            &__name {
+                display: flex;
+                margin-top: 8px;
+                margin-left: 16px;
+
+                p {
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    line-height: calc(19 / 16);
+                }
+                span {
+                    margin-left: 12px;
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    line-height: calc(19 / 16);
+                }
+            }
+            &__phone {
+                display: flex;
+                margin-top: 8px;
+                margin-left: 16px;
+
+                p {
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    line-height: calc(19 / 16);
+                }
+                span {
+                    margin-left: 12px;
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    line-height: calc(19 / 16);
+                }
+            }
+            &__address {
+                display: flex;
+                margin-top: 8px;
+                margin-left: 16px;
+
+                p {
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    line-height: calc(19 / 16);
+                }
+                span {
+                    margin-left: 12px;
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    line-height: calc(19 / 16);
+                }
+            }
+        }
+        &__payment {
+            margin-bottom: 30px;
+            &__title {
+                font-size: 2.4rem;
+                font-weight: 500;
+                line-height: calc(36 / 24);
+                margin-top: 12px;
+            }
+            &__info {
+                color: green;
+                margin-top: 8px;
+                margin-left: 16px;
+                font-size: 1.6rem;
+                font-weight: 400;
+                line-height: calc(19 / 16);
+            }
+            &__amount {
+                display: flex;
+                margin-top: 8px;
+                margin-left: 16px;
+
+                p {
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    line-height: calc(19 / 16);
+                }
+                span {
+                    margin-left: 12px;
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    line-height: calc(19 / 16);
+                }
+            }
+        }
+        &__order-status {
+            margin-bottom: 30px;
+            &__title {
+                font-size: 2.4rem;
+                font-weight: 500;
+                line-height: calc(36 / 24);
+                margin-top: 12px;
+            }
+            &__info {
+                color: red;
+                margin-top: 8px;
+                margin-left: 16px;
+                font-size: 1.6rem;
+                font-weight: 400;
+                line-height: calc(19 / 16);
+            }
+            .active {
+                color: green;
+            }
+        }
+        &__order-items {
+            margin-bottom: 30px;
+            &__title {
+                font-size: 2.4rem;
+                font-weight: 500;
+                line-height: calc(36 / 24);
+                margin-top: 12px;
+            }
+            &__cart {
+                margin-top: 8px;
+                margin-left: 16px;
+                &__item {
+                    margin-bottom: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    &__image {
+                        width: 80px;
+                        height: 80px;
+                        object-fit: contain;
+                    }
+                    &__name {
+                        display: block;
+                        font-size: 2.4rem;
+                        font-weight: 500;
+                        line-height: calc(32 / 24);
+                        flex: 0.3;
+                    }
+                    &__price {
+                        display: flex;
+                        align-items: center;
+                        flex: 0.5;
+                        p {
+                            font-size: 1.6rem;
+                            font-weight: 400;
+                            line-height: calc(19 / 16);
+                        }
+                        span {
+                            margin-left: 8px;
+                            font-size: 1.6rem;
+                            font-weight: 400;
+                            line-height: calc(19 / 16);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

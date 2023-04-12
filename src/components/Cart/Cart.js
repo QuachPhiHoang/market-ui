@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Cart.scss';
-import fakeData from '~/fakeData';
 import Button from '~/components/Button';
 import CartItem from './CartItem';
 
@@ -20,6 +19,11 @@ function Cart() {
     const backToCatalog = () => {
         navigate('/category');
     };
+    const CheckOut = () => {
+        if (cartItems.length > 0) {
+            navigate('/shipping');
+        }
+    };
     useEffect(() => {
         setTotalProducts(cartItems.reduce((arr, cur) => arr + cur.quantity, 0));
         setTotalPrice(cartItems.reduce((arr, cur) => arr + cur.quantity * cur.price, 0));
@@ -27,7 +31,7 @@ function Cart() {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [cartItems]);
+    }, []);
     return (
         <div className={cx('cart')}>
             <div className={cx('cart__path')}>
@@ -65,10 +69,16 @@ function Cart() {
                     <p className={cx('cart__coupon__total__price')}>{`$${totalPrice}.00`}</p>
                 </div>
             </div>
-            <Button large className={cx('btn')}>
-                Proceed to Checkout
-            </Button>
-            <Button large className={cx('btn')} onClick={() => backToCatalog()}>
+            {cartItems && cartItems.length > 0 ? (
+                <Button large className={cx('btn')} onClick={() => CheckOut()}>
+                    Proceed to Checkout
+                </Button>
+            ) : (
+                <Button large disable className={cx('checkout-btn')}>
+                    Proceed to Checkout
+                </Button>
+            )}
+            <Button large className={cx('back-btn')} onClick={() => backToCatalog()}>
                 Back to Catalog
             </Button>
         </div>

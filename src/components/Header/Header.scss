@@ -2,6 +2,9 @@
     max-width: var(--width);
     max-height: 136px;
     margin: auto;
+    -webkit-box-shadow: 8px 15px 16px -25px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 8px 15px 16px -25px rgba(0, 0, 0, 0.75);
+    box-shadow: 8px 15px 16px -25px rgba(0, 0, 0, 0.75);
     &__topbar {
         width: 100%;
         display: flex;
@@ -76,6 +79,7 @@
                 padding: 6px;
                 width: 36px;
                 height: 36px;
+                border-radius: 50%;
             }
             &-login {
                 border-radius: 5px;
@@ -88,8 +92,10 @@
                 align-items: center;
                 position: relative;
                 &--info {
+                    display: flex;
                     margin: 0;
-                    text-align: center;
+                    align-items: center;
+                    justify-content: center;
                     width: 18px;
                     height: 18px;
                     color: var(--white-color);

@@ -5,12 +5,19 @@ import GlobalStyle from '~/components/GlobalStyle';
 import reportWebVitals from './reportWebVitals';
 import { store } from '~/redux/store';
 import { Provider } from 'react-redux';
+import { injectStore } from '~/service/axiosInterceptor';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
 const root = ReactDOM.createRoot(document.getElementById('root'));
+injectStore(store);
+let persistor = persistStore(store);
 root.render(
     <React.StrictMode>
         <GlobalStyle>
             <Provider store={store}>
-                <App />
+                <PersistGate persistor={persistor}>
+                    <App />
+                </PersistGate>
             </Provider>
         </GlobalStyle>
     </React.StrictMode>,

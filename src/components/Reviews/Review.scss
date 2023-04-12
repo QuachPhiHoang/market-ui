@@ -27,3 +27,75 @@
         }
     }
 }
+
+.modal-reviews {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(200, 200, 200, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &__container {
+        // z-index: 10;
+        width: 500px;
+        height: 500px;
+        border-radius: 12px;
+        background-color: white;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        display: flex;
+        flex-direction: column;
+        padding: 25px;
+        position: relative;
+    }
+    &__btn-close {
+        position: absolute;
+        width: 50px;
+        min-width: 30px;
+        height: 50px;
+        color: var(--text-color);
+        right: 26px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        &:hover {
+            background-color: red;
+            color: var(--white-color);
+            text-decoration: none;
+        }
+    }
+    &__form {
+        margin-top: 80px;
+        &__title {
+            font-size: 2.6rem;
+            font-weight: 600;
+            line-height: calc(36 / 26);
+        }
+        &__comment {
+            margin-top: 30px;
+            display: block;
+            border: 1px solid #ccc;
+            max-width: 400px;
+            max-height: 80px;
+            &::placeholder {
+                padding-top: 10px;
+            }
+        }
+        &__rating {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        &__btn {
+            margin-top: 70px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}
+.MuiRating-icon,
+.MuiRating-iconEmpty,
+.css-1c99szj-MuiRating-icon {
+    width: 30px;
+    height: 30px;
+}

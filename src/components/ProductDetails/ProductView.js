@@ -1,6 +1,6 @@
-import ReactStars from 'react-rating-stars-component';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Carousel from 'react-material-ui-carousel';
 import { useNavigate } from 'react-router-dom';
 import withRouter from '~/hooks/withRouter';
 
@@ -12,6 +12,9 @@ import icons from '~/assets/icons';
 import classNames from 'classnames/bind';
 import styles from './ProductDetails.scss';
 import Button from '~/components/Button';
+import { Rating } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cx = classNames.bind(styles);
 
@@ -19,12 +22,10 @@ function ProductView({ product }) {
     const dispatch = useDispatch();
 
     const options = {
-        count: 5,
-        edit: false,
-        color: 'rgba(20,20,20,0.1)',
-        activeColor: '#E6E650',
-        value: product.ratings ? product.ratings : 0,
-        isHalf: true,
+        size: 'large',
+        value: product?.ratings ? product?.ratings : 0,
+        readOnly: true,
+        precision: 0.5,
     };
 
     const navigate = useNavigate();
@@ -50,12 +51,12 @@ function ProductView({ product }) {
 
     const check = () => {
         if (color === undefined) {
-            alert('Please select a color');
+            toast.warning('Please select a color');
             return false;
         }
 
         if (size === undefined) {
-            alert('Please select a size');
+            alert.warning('Please select a size');
             return false;
         }
         return true;
@@ -64,7 +65,7 @@ function ProductView({ product }) {
     const addToCart = () => {
         if (check()) {
             dispatch(addItemsToCart({ id: product._id, quantity, color, size }));
-            alert('done');
+            toast.success('Add To Cart Success');
         }
     };
 
@@ -81,39 +82,14 @@ function ProductView({ product }) {
                 <div className={cx(`product__details__sale ${Number(product.sale) === 0 ? '' : 'active'}`)}>
                     <p className={cx('product__details__sale__info')}>{product.sale}%</p>
                 </div>
-                <div className={cx('product__details__images__main')}>
-                    <img src={product.img} alt="productDetails" />
-                </div>
-                <div className={cx('product__details__list')}>
-                    <div className={cx('product__details__list__images')}>
-                        <img
-                            className={cx('product__details__images')}
-                            srcSet={`${images.img_productDetails_section} 2x`}
-                            alt="productDetails-Section"
-                        />
-                    </div>
-                    <div className={cx('product__details__list__images')}>
-                        <img
-                            className={cx('product__details__images')}
-                            srcSet={`${images.img_productDetails_section} 2x`}
-                            alt="productDetails-Section"
-                        />
-                    </div>
-                    <div className={cx('product__details__list__images')}>
-                        <img
-                            className={cx('product__details__images')}
-                            srcSet={`${images.img_productDetails_section} 2x`}
-                            alt="productDetails-Section"
-                        />
-                    </div>
-                    <div className={cx('product__details__list__images')}>
-                        <img
-                            className={cx('product__details__images')}
-                            srcSet={`${images.img_productDetails_section} 2x`}
-                            alt="productDetails-Section"
-                        />
-                    </div>
-                </div>
+                <Carousel autoPlay className={cx('product__details__images__main')}>
+                    {product.img &&
+                        product?.img.map((item, index) => (
+                            <div key={item._id}>
+                                <img src={item.url} alt={`${item[index]}`} />
+                            </div>
+                        ))}
+                </Carousel>
             </div>
             <div className={cx('product__details__description')}>
                 <div className={cx('product__details__description__path')}>
@@ -123,7 +99,7 @@ function ProductView({ product }) {
                 </div>
                 <div className={cx('product__details__description__title')}>{product.name}</div>
                 <div className={cx('product__details__vote')}>
-                    <ReactStars {...options} />
+                    <Rating {...options} />
                     <p className={cx('product__details__vote__quantity')}>{`(${product.numOfReviews})`}</p>
                 </div>
                 <div className={cx('product__details__price')}>
@@ -195,7 +171,12 @@ function ProductView({ product }) {
                 </div>
 
                 <div className={cx('product__details__btn')}>
-                    <Button primary className={cx('product__details__btn__add')} onClick={() => addToCart()}>
+                    <Button
+                        disable={product.stock < 1 ? true : false}
+                        primary
+                        className={cx('product__details__btn__add')}
+                        onClick={() => addToCart()}
+                    >
                         ADD TO CART
                     </Button>
                     <Button primary className={cx('product__details__btn__buy')} onClick={() => goToCart()}>
@@ -228,6 +209,7 @@ function ProductView({ product }) {
                     </div>
                 </div>
             </div>
+            <ToastContainer draggable={false} position="top-right" autoClose={3000} />
         </div>
     );
 }

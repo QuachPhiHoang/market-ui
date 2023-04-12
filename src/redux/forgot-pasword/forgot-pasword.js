@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import axiosInstance from '~/service/axiosInterceptor';
 
-const USERFORGOTASSWORD_URL = `http://localhost:8080/api/auth/password/forgot`;
-const USERRESETPASSWORD_URL = `http://localhost:8080/api/auth/password/reset/`;
 const initialState = {
     error: null,
     message: null,
@@ -17,7 +15,7 @@ export const forgotPassword = createAsyncThunk('profile/forgotPassword', async (
         },
     };
     try {
-        const { data } = await axios.post(USERFORGOTASSWORD_URL, email, config);
+        const { data } = await axiosInstance.post('auth/password/forgot', email, config);
         toast.success('send email success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
         return { data };
     } catch (error) {
@@ -34,11 +32,10 @@ export const resetPassword = createAsyncThunk('profile/resetPassword', async (ob
         },
     };
     try {
-        const { data } = await axios.put(`${USERRESETPASSWORD_URL}${obj.token.token}`, obj.password, config);
+        const { data } = await axiosInstance.put(`${'auth/password/reset/'}${obj.token.token}`, obj.password, config);
         toast.success('reset password success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
         return data;
     } catch (error) {
-        console.log(error);
         toast.error(error.response.data.message, { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
         return rejectWithValue(error.response.data.message);
     }

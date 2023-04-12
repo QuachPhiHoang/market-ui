@@ -1,10 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { toast } from 'react-toastify';
-import useAxiosInstance from '../axiosInterceptor/axiosInterceptor';
-
-const USERUPDATEPROFILE_URL = `http://localhost:8080/api/auth/update/profile`;
-const USERUPDATEPASSWORD_URL = `http://localhost:8080/api/auth/update/password`;
+import axiosInstance from '~/service/axiosInterceptor';
 
 const initialState = {
     error: null,
@@ -19,7 +15,7 @@ export const updateProfile = createAsyncThunk('profile/UpdateProfile', async (my
         withCredentials: true,
     };
     try {
-        const { data } = await axios.put(USERUPDATEPROFILE_URL, myForm, config);
+        const { data } = await axiosInstance.put('auth/update/profile', myForm, config);
         toast.success('update profile success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
         return data;
     } catch (error) {
@@ -28,29 +24,19 @@ export const updateProfile = createAsyncThunk('profile/UpdateProfile', async (my
     }
 });
 
-export const updatePassword = createAsyncThunk(
-    'profile/UpdatePassword',
-    // async ({ password, token }, { rejectWithValue }) => {
-    async (password, { rejectWithValue }) => {
-        const axiosPrivate = useAxiosInstance();
-        // const config = {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data',
-        //         Authorization: `Bearer ${token}`,
-        //     },
-        //     withCredentials: true,
-        // };
-        try {
-            const { data } = await axiosPrivate.put('/auth/update/password', { password });
-            toast.success('update profile success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
-            return data;
-        } catch (error) {
-            console.log(error);
-            toast.error(error.response.data, { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
-            return rejectWithValue(error.response.data);
-        }
-    },
-);
+export const updatePassword = createAsyncThunk('profile/UpdatePassword', async ({ password }, { rejectWithValue }) => {
+    const config = {
+        withCredentials: true,
+    };
+    try {
+        const { data } = await axiosInstance.put('auth/update/password', password, config);
+        toast.success('update profile success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
+        return data;
+    } catch (error) {
+        toast.error(error.response.data, { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
+        return rejectWithValue(error.response.data);
+    }
+});
 
 export const profileSlice = createSlice({
     name: 'profile',

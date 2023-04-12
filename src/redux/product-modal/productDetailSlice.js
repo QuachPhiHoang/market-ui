@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-const PRODUCTS_URL = 'http://localhost:8080/api/products/find';
+import axiosInstance from '~/service/axiosInterceptor';
 
 const initialState = {
     productId: null,
@@ -11,10 +9,11 @@ const initialState = {
 
 export const getProductDetail = createAsyncThunk('product/getProductDetail', async (id) => {
     try {
-        const { data } = await axios.get(`${PRODUCTS_URL}/${id}`);
+        const { data } = await axiosInstance.get(`${'products/find'}/${id}`);
+        console.log(data);
         return data;
     } catch (error) {
-        console.log(error);
+        return error.response.data.message;
     }
 });
 

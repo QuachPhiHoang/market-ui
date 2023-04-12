@@ -17,6 +17,17 @@ const icons = {
     close: require('~/assets/icons/close.svg').default,
     showPassword: require('~/assets/icons/showPassword.svg').default,
     logOut: require('~/assets/icons/logout.svg').default,
+    orderConfirm: require('~/assets/icons/orderConfirm.svg').default,
+    shipping: require('~/assets/icons/shipping.svg').default,
+    payment: require('~/assets/icons/payment.svg').default,
+    orderConfirm_active: require('~/assets/icons/orderConfirm_active.svg').default,
+    shipping_active: require('~/assets/icons/shipping_active.svg').default,
+    payment_active: require('~/assets/icons/payment_active.svg').default,
+    payment_number: require('~/assets/icons/payment_info.svg').default,
+    payment_cvc: require('~/assets/icons/payment_keyword.svg').default,
+    payment_expiry: require('~/assets/icons/payment_day.svg').default,
+    success: require('~/assets/icons/success.svg').default,
+    dashboard: require('~/assets/icons/dashboard.svg').default,
 };
 
 export default icons;

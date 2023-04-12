@@ -46,6 +46,7 @@ function Button({
         primary,
         outline,
         disable,
+        text,
         small,
         large,
         rounded,

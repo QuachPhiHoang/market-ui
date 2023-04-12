@@ -53,12 +53,6 @@ function UpdateProfile() {
             setEmail(user?.user?.email);
             setAvatarReview(user?.user?.avatar?.url);
         }
-        // if (isUpdate) {
-        //     // dispatch(reset()).then(() => {
-        //     //     dispatch(loadUser()).then(() => navigate('/account'));
-        //     // });
-
-        // }
     }, [user]);
 
     useEffect(() => {

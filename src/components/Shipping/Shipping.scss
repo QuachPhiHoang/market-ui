@@ -1,4 +1,4 @@
-.checkout {
+.shipping {
     width: var(--width);
     margin: auto;
     margin-top: 40px;
@@ -67,6 +67,45 @@
                 color: #555;
             }
         }
+        &__ward {
+            margin-top: 23px;
+            label {
+                display: block;
+                font-weight: 400;
+                font-size: 1.6rem;
+                line-height: calc(19 / 16);
+                color: #555;
+            }
+            input {
+                font-size: 1.6rem;
+                font-weight: 400;
+                line-height: calc(19 / 16);
+                margin-top: 8px;
+                width: 620px;
+                height: 48px;
+                border: 1px solid #ebebeb;
+            }
+        }
+
+        &__district {
+            margin-top: 23px;
+            label {
+                display: block;
+                font-weight: 400;
+                font-size: 1.6rem;
+                line-height: calc(19 / 16);
+                color: #555;
+            }
+            input {
+                font-size: 1.6rem;
+                font-weight: 400;
+                line-height: calc(19 / 16);
+                margin-top: 8px;
+                width: 620px;
+                height: 48px;
+                border: 1px solid #ebebeb;
+            }
+        }
 
         &__town {
             margin-top: 23px;
@@ -129,101 +168,12 @@
         }
     }
 
-    &__order {
-        margin-top: 51px;
-
-        &__title {
-            font-size: 3.6rem;
-            font-weight: 700;
-            line-height: calc(48 / 36);
-            color: #1d1d1d;
-        }
-
-        table {
-            margin-top: 30px;
-            width: 100%;
-        }
-        thead,
-        tbody,
-        tr {
-            border: 1px solid #ebebeb;
-        }
-
-        th,
-        td {
-            padding: 23px 0;
-        }
-
-        &__product {
-            padding-left: 16px !important;
-            font-size: 1.6rem;
-            font-weight: 700;
-            line-height: calc(19 / 16);
-            color: #1d1d1d;
-            &__item {
-                padding-left: 32px !important;
-                font-weight: 400;
-                font-size: 1.6rem;
-                line-height: calc(19 / 16);
-                color: #555;
-            }
-            &__price {
-                font-weight: 400;
-                font-size: 1.6rem;
-                line-height: calc(19 / 16);
-                color: #1d1d1d;
-            }
-        }
-        &__total {
-            padding-right: 50px !important;
-            font-size: 1.6rem;
-            font-weight: 700;
-            line-height: calc(19 / 16);
-            color: #1d1d1d;
-            &__price {
-                font-weight: 400;
-                font-size: 1.6rem;
-                line-height: calc(19 / 16);
-                color: #1d1d1d;
-            }
-        }
-        &__subtotal {
-            padding-left: 16px !important;
-            font-weight: 400;
-            font-size: 1.6rem;
-            line-height: calc(19 / 16);
-            color: #555;
-        }
-        &__price {
-            font-weight: 400;
-            font-size: 1.6rem;
-            line-height: calc(19 / 16);
-            color: #555;
-        }
-
-        &__delivery {
-            margin-top: 44px;
-            height: 245px;
-            border: 1px solid #ebebeb;
-            position: relative;
-            &__description {
-                margin: 33px 24px 0 24px;
-                padding: 24px 509px 24px 16px;
-                border: 1px solid #ebebeb;
-                background: linear-gradient(0deg, #fbfbfb, #fbfbfb), linear-gradient(0deg, #ebebeb, #ebebeb);
-                color: #555;
-                font-weight: 400;
-                font-size: 1.6rem;
-                line-height: calc(19 / 16);
-            }
-        }
-
-        &__btn {
-            position: absolute;
-            margin-top: 33px;
-            right: 24px;
-            background-color: #d6763c !important;
-            text-transform: uppercase;
-        }
+    &__btn {
+        margin-top: 33px;
+        margin-bottom: 24px;
+        right: 24px;
+        background-color: #d6763c !important;
+        text-transform: uppercase;
+        cursor: pointer;
     }
 }

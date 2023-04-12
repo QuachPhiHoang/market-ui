@@ -67,7 +67,7 @@ function Search() {
                             ) : (
                                 products?.map((item) => <SearchItem data={item} key={item._id} />)
                             )}
-                            {filteredProductsCount > resultPerPage ? (
+                            {filteredProductsCount >= resultPerPage ? (
                                 <div className={cx('search__all')} onClick={searchSubmitHandler}>
                                     See All Products
                                 </div>

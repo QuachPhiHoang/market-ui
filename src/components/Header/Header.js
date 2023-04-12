@@ -22,11 +22,9 @@ const cx = classNames.bind(styles);
 
 function Header() {
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
-    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    // const cartItems = useSelector((state) => state.cartItems.value);
+    const { user, isAuthenticated } = useSelector((state) => state.user);
+    const cartItems = useSelector((state) => state.cart.cartItems);
     const [totalProducts, setTotalProducts] = useState(0);
-    // console.log(user.user._id);
     const menu = [
         {
             title: 'View Profile',
@@ -42,9 +40,17 @@ function Header() {
         },
     ];
 
-    // useEffect(() => {
-    //     setTotalProducts(cartItems.reduce((arr, cur) => arr + cur.quantity, 0));
-    // }, [cartItems]);
+    if (user?.user?.role === 'admin') {
+        menu.unshift({
+            title: 'Dashboard',
+            icon: icons.dashboard,
+            to: '/admin/dashboard',
+        });
+    }
+
+    useEffect(() => {
+        setTotalProducts(cartItems.reduce((arr, cur) => arr + cur.quantity, 0));
+    }, [cartItems]);
 
     return (
         <div className={cx('header')}>

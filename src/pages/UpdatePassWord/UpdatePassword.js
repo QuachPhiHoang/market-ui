@@ -23,7 +23,6 @@ function UpdatePassword() {
         showPassword: false,
     });
     const { isUpdate } = useSelector((state) => state.profile);
-    const { user } = useSelector((state) => state.user);
 
     const updatePasswordSubmit = (e) => {
         e.preventDefault();
@@ -33,7 +32,7 @@ function UpdatePassword() {
         myForm.set('newPassword', newPassword);
         myForm.set('confirmNewPassword', confirmNewPassword);
 
-        dispatch(updatePassword({ password: myForm, token: user.accessToken }));
+        dispatch(updatePassword({ password: myForm }));
     };
 
     useEffect(() => {

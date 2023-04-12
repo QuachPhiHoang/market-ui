@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '~/service/axiosInterceptor';
 
 const initialState = {
     products: [],
@@ -7,20 +7,19 @@ const initialState = {
     status: 'idle',
     error: null,
 };
-const PRODUCTS_URL = `http://localhost:8080/api/products`;
 
 export const getProducts = createAsyncThunk('product/getProducts', async (obj) => {
     try {
         if (Object.keys(obj).length > 0) {
             if (obj.categories.length > 0) {
-                const { data } = await axios.get(
-                    `${PRODUCTS_URL}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
+                const { data } = await axiosInstance.get(
+                    `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
                         obj.price[0]
                     }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}&categorySlug=${obj.categories}`,
                 );
                 if (obj.gender.length > 0) {
-                    const { data } = await axios.get(
-                        `${PRODUCTS_URL}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
+                    const { data } = await axiosInstance.get(
+                        `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
                             obj.price[0]
                         }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}&categorySlug=${
                             obj.categories
@@ -31,14 +30,14 @@ export const getProducts = createAsyncThunk('product/getProducts', async (obj) =
                 return data;
             }
             if (obj.gender.length > 0) {
-                const { data } = await axios.get(
-                    `${PRODUCTS_URL}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
+                const { data } = await axiosInstance.get(
+                    `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
                         obj.price[0]
                     }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}&gender=${obj.gender}`,
                 );
                 if (obj.categories.length > 0) {
-                    const { data } = await axios.get(
-                        `${PRODUCTS_URL}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
+                    const { data } = await axiosInstance.get(
+                        `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
                             obj.price[0]
                         }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}&categorySlug=${
                             obj.categories
@@ -48,17 +47,17 @@ export const getProducts = createAsyncThunk('product/getProducts', async (obj) =
                 }
                 return data;
             }
-            const { data } = await axios.get(
-                `${PRODUCTS_URL}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
+            const { data } = await axiosInstance.get(
+                `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
                     obj.price[0]
                 }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}`,
             );
             return data;
         }
-        const { data } = await axios.get(PRODUCTS_URL);
+        const { data } = await axiosInstance.get('products');
         return data;
     } catch (error) {
-        console.log(error);
+        return error.response.data.message;
     }
 });
 

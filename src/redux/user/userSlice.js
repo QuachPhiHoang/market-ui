@@ -1,12 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import axiosInstance from '~/service/axiosInterceptor';
 
-const USERLOGIN_URL = `http://localhost:8080/api/auth/login`;
-const USERREGISTER_URL = `http://localhost:8080/api/auth/register`;
-const USERLOGOUT_URL = `http://localhost:8080/api/auth/logout`;
-const LOADUSER_URL = `http://localhost:8080/api/auth/me`;
-const REFRESHTOKEN_URL = `http://localhost:8080/api/auth/refresh`;
 const initialState = {
     user: {},
     isAuthenticated: false,
@@ -22,7 +17,7 @@ export const login = createAsyncThunk('user/LoginUser', async ({ username, passw
         withCredentials: true,
     };
     try {
-        const { data } = await axios.post(USERLOGIN_URL, { username, password }, config);
+        const { data } = await axiosInstance.post('auth/login', { username, password }, config);
         toast.success('login success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
         return data;
     } catch (error) {
@@ -39,7 +34,7 @@ export const register = createAsyncThunk('user/RegisterUser', async (myForm, { r
         withCredentials: true,
     };
     try {
-        const { data } = await axios.post(USERREGISTER_URL, myForm, config);
+        const { data } = await axiosInstance.post('auth/register', myForm, config);
         toast.success('register success', { draggable: true, position: toast.POSITION.BOTTOM_CENTER });
         return data;
     } catch (error) {
@@ -56,7 +51,7 @@ export const logOut = createAsyncThunk('user/Logout', async () => {
         withCredentials: true,
     };
     try {
-        const { data } = await axios.get(USERLOGOUT_URL, config);
+        const { data } = await axiosInstance.get('auth/logout', config);
         return data;
     } catch (error) {
         return error.response.data.message;
@@ -64,21 +59,19 @@ export const logOut = createAsyncThunk('user/Logout', async () => {
 });
 export const loadUser = createAsyncThunk('user/LoadUser', async () => {
     try {
-        const { data } = await axios.get(LOADUSER_URL, { withCredentials: true });
+        const { data } = await axiosInstance.get('auth/me', { withCredentials: true });
         return data;
     } catch (error) {
-        console.log(error);
-        return error;
+        return error.response.data.message;
     }
 });
 
 export const refreshToken = createAsyncThunk('user/RefreshToken', async () => {
     try {
-        const { data } = await axios.get(REFRESHTOKEN_URL, { withCredentials: true });
+        const { data } = await axiosInstance.get('auth/refresh', { withCredentials: true });
         return data;
     } catch (error) {
-        console.log(error);
-        return error;
+        return error.response.data.message;
     }
 });
 
@@ -148,7 +141,7 @@ export const userSlice = createSlice({
         });
         builder.addCase(refreshToken.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.user.accessToken = action.payload;
+            state.user.accessToken = action.payload.accessToken;
             state.isAuthenticated = true;
         });
         builder.addCase(refreshToken.pending, (state, action) => {

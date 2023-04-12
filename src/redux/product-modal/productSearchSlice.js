@@ -1,19 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '~/service/axiosInterceptor';
 
 const initialState = {
     products: [],
     status: 'idle',
     error: null,
 };
-const PRODUCTS_URL = `http://localhost:8080/api/products/search`;
 
 export const getProductSearch = createAsyncThunk('product/getProductSearch', async (keyword) => {
     try {
-        const { data } = await axios.get(`${PRODUCTS_URL}?keyword=${keyword}`);
+        const { data } = await axiosInstance.get(`${'products/search'}?keyword=${keyword}`);
         return data;
     } catch (error) {
-        console.log(error);
+        return error.response.data.message;
     }
 });
 
