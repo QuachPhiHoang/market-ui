@@ -15,7 +15,6 @@ export const addItemsToCart = createAsyncThunk('addItem/Cart', async (obj, Thunk
                 product: data._id,
                 name: data.name,
                 price: data.price,
-                // image: data?.product?.images[0]?.url,
                 image: data.img,
                 stock: data.stock,
                 size: obj.size,

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '~/service/axiosInterceptor';
 
 const initialState = {
+    allOrders: [],
     myOrders: [],
     orders: {},
     error: null,
@@ -25,6 +26,15 @@ export const createOrder = createAsyncThunk('create/newOrder', async (order, { r
 export const myOrder = createAsyncThunk('get/myOrder', async () => {
     try {
         const { data } = await axiosInstance.get('orders/my-order', { withCredentials: true });
+        return data;
+    } catch (error) {
+        return error.response.data.message;
+    }
+});
+
+export const getAdminOrders = createAsyncThunk('get/adminOrders', async () => {
+    try {
+        const { data } = await axiosInstance.get('orders', { withCredentials: true });
         return data;
     } catch (error) {
         return error.response.data.message;
@@ -63,6 +73,17 @@ export const orderSlice = createSlice({
             state.status = 'failed';
             state.myOrders = null;
             state.error = action.payload;
+        });
+        builder.addCase(getAdminOrders.pending, (state, action) => {
+            state.status = 'pending';
+        });
+        builder.addCase(getAdminOrders.fulfilled, (state, action) => {
+            state.status = 'pending';
+            state.allOrders = action.payload;
+        });
+        builder.addCase(getAdminOrders.rejected, (state, action) => {
+            state.status = 'pending';
+            state.allOrders = null;
         });
     },
 });

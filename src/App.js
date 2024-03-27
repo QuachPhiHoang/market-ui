@@ -8,26 +8,20 @@ import { loadUser } from './redux/user/userSlice';
 import { store } from '~/redux/store';
 import WebFont from 'webfontloader';
 import axiosInstance from '~/service/axiosInterceptor';
+import { useSelector, useDispatch } from 'react-redux';
 
 function App() {
     const [stripeApi, setStripeApi] = useState('');
-    const state = store.getState();
-    console.log(state.user.isAuthenticated);
+    const user = useSelector((state) => state.user);
     async function getStripeApi() {
         const { data } = await axiosInstance.get('payment/stripeapikey', { withCredentials: true });
         setStripeApi(data.stripeApiKey);
     }
     useEffect(() => {
-        WebFont.load({
-            google: {
-                families: ['Roboto', 'Droid Sans', 'Chilanka'],
-            },
-        });
-        if (state.user.isAuthenticated) {
-            store.dispatch(loadUser());
+        if (user?.isAuthenticated) {
             getStripeApi();
         }
-    }, [state.user.isAuthenticated]);
+    }, [user?.isAuthenticated]);
     return (
         <Router>
             <div className="App">
@@ -72,29 +66,3 @@ function App() {
 }
 
 export default App;
-
-// return route.isStripe ? (
-//     stripeApi && (
-//         <Route
-//             key={index}
-//             path={route.path}
-//             element={
-//                 <Elements stripe={loadStripe(stripeApi)}>
-//                     <ProtectedRoute>
-//                         <Component />
-//                     </ProtectedRoute>
-//                 </Elements>
-//             }
-//         />
-//     )
-// ) : (
-//     <Route
-//         key={index}
-//         path={route.path}
-//         element={
-//             <ProtectedRoute>
-//                 <Component />
-//             </ProtectedRoute>
-//         }
-//     />
-// );

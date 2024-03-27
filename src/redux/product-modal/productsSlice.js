@@ -6,54 +6,13 @@ const initialState = {
     productsCount: null,
     status: 'idle',
     error: null,
+    product: {},
+    isDeleted: false,
+    isUpdated: false,
 };
 
 export const getProducts = createAsyncThunk('product/getProducts', async (obj) => {
     try {
-        if (Object.keys(obj).length > 0) {
-            if (obj.categories.length > 0) {
-                const { data } = await axiosInstance.get(
-                    `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
-                        obj.price[0]
-                    }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}&categorySlug=${obj.categories}`,
-                );
-                if (obj.gender.length > 0) {
-                    const { data } = await axiosInstance.get(
-                        `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
-                            obj.price[0]
-                        }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}&categorySlug=${
-                            obj.categories
-                        }&gender=${obj.gender}`,
-                    );
-                    return data;
-                }
-                return data;
-            }
-            if (obj.gender.length > 0) {
-                const { data } = await axiosInstance.get(
-                    `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
-                        obj.price[0]
-                    }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}&gender=${obj.gender}`,
-                );
-                if (obj.categories.length > 0) {
-                    const { data } = await axiosInstance.get(
-                        `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
-                            obj.price[0]
-                        }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}&categorySlug=${
-                            obj.categories
-                        }&gender=${obj.gender}`,
-                    );
-                    return data;
-                }
-                return data;
-            }
-            const { data } = await axiosInstance.get(
-                `${'products'}?keyword=${obj.keyword || ''}&page=${obj.currentPage || 1}&price[gte]=${
-                    obj.price[0]
-                }&price[lte]=${obj.price[1]}&ratings[gte]=${obj.ratings}`,
-            );
-            return data;
-        }
         const { data } = await axiosInstance.get('products');
         return data;
     } catch (error) {
@@ -61,10 +20,62 @@ export const getProducts = createAsyncThunk('product/getProducts', async (obj) =
     }
 });
 
+export const getAdminProducts = createAsyncThunk('products/getAdminProducts', async () => {
+    try {
+        const { data } = await axiosInstance.get('products/admin-products', { withCredentials: true });
+        return data;
+    } catch (error) {
+        return error.response.data.message;
+    }
+});
+
+export const deleteProducts = createAsyncThunk('products/deleteProducts', async (id, { rejectWithValue }) => {
+    try {
+        const { data } = await axiosInstance.delete(`products/delete/${id}`, { withCredentials: true });
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response.data.message);
+    }
+});
+
+export const createProduct = createAsyncThunk('products/newProduct', async (myForm, { rejectWithValue }) => {
+    const config = {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+    };
+    try {
+        const { data } = await axiosInstance.post('products/create', myForm, config);
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response.data.message);
+    }
+});
+
+export const updateProduct = createAsyncThunk('products/updateProduct', async (obj, { rejectWithValue }) => {
+    const config = {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+    };
+    try {
+        const { data } = await axiosInstance.put(`products/${obj.id}`, obj.myForm, config);
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response.data.message);
+    }
+});
+
 export const productSlice = createSlice({
     name: 'Products',
     initialState,
-    reducers: {},
+    reducers: {
+        reset: (state) => {
+            Object.assign(state, { isDeleted: false, isUpdated: false });
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(getProducts.pending, (state, action) => {
             state.status = 'loading';
@@ -79,6 +90,53 @@ export const productSlice = createSlice({
         builder.addCase(getProducts.rejected, (state, action) => {
             state.status = 'failed';
         });
+        builder.addCase(getAdminProducts.pending, (state, action) => {
+            state.status = 'loading';
+        });
+        builder.addCase(getAdminProducts.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.products = action.payload.products;
+        });
+        builder.addCase(getAdminProducts.rejected, (state, action) => {
+            state.status = 'failed';
+            state.products = null;
+        });
+        builder.addCase(deleteProducts.pending, (state, action) => {
+            state.status = 'loading';
+        });
+        builder.addCase(deleteProducts.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.isDeleted = action.payload.success;
+        });
+        builder.addCase(deleteProducts.rejected, (state, action) => {
+            state.status = 'failed';
+            state.isDeleted = false;
+        });
+        builder.addCase(createProduct.pending, (state, action) => {
+            state.status = 'loading';
+        });
+        builder.addCase(createProduct.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.isSuccess = action.payload.success;
+            state.product = action.payload.product;
+        });
+        builder.addCase(createProduct.rejected, (state, action) => {
+            state.status = 'failed';
+            state.product = {};
+        });
+        builder.addCase(updateProduct.pending, (state, action) => {
+            state.status = 'loading';
+        });
+        builder.addCase(updateProduct.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.isUpdated = action.payload.success;
+            state.product = action.payload.product;
+        });
+        builder.addCase(updateProduct.rejected, (state, action) => {
+            state.status = 'failed';
+            state.product = {};
+        });
     },
 });
+export const { reset } = productSlice.actions;
 export default productSlice.reducer;

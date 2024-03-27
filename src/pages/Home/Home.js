@@ -2,7 +2,7 @@ import Benefit from '~/components/Benefit';
 import Footer from '~/components/Footer';
 import Header from '~/components/Header';
 import Hero from '~/components/Hero';
-import NewProduct from '~/components/NewProduct';
+import NewProduct from '~/components/Products';
 import ProductViewModal from '~/components/ProductDetails/ProductViewModal';
 import Promo from '~/components/Promo';
 import Sell from '~/components/Sell';

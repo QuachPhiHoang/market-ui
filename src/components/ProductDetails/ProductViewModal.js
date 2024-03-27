@@ -24,7 +24,7 @@ function ProductViewModal() {
     return product ? (
         <div className={cx(`product-view__modal ${productId === null ? '' : 'active'}`)}>
             <div className={cx(`product-view__modal__content ${productId === null ? '' : 'active'}`)}>
-                <ProductView product={product ? product : {}} />
+                <ProductView product={product.product ? product.product : {}} />
                 <Button
                     small
                     outline

@@ -15,6 +15,8 @@ import shippingInfoSlice from './shippingInfo/shippingInfoSlice';
 import orderSlice from './order/orderSlice';
 import orderDetailsSlice from './order/orderDetailsSlice';
 import reviewsSlice from './reviews/reviewsSlice';
+import colorSlice from './color/colorSlice';
+import sizeSlice from './size/sizeSlice';
 
 const persistConfig = {
     key: 'root',
@@ -35,6 +37,8 @@ const reducer = combineReducers({
     order: orderSlice,
     orderDetails: orderDetailsSlice,
     reviews: reviewsSlice,
+    colors: colorSlice,
+    sizes: sizeSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

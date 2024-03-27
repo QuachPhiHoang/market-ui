@@ -10,7 +10,6 @@ const initialState = {
 export const getProductDetail = createAsyncThunk('product/getProductDetail', async (id) => {
     try {
         const { data } = await axiosInstance.get(`${'products/find'}/${id}`);
-        console.log(data);
         return data;
     } catch (error) {
         return error.response.data.message;

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Search.scss';
@@ -19,7 +19,7 @@ function Search() {
     const [keyword, setKeyword] = useState('');
     const [showResult, setShowResult] = useState('false');
     const debouncedValue = useDebounced(keyword, 500);
-    const { products, status, filteredProductsCount, resultPerPage } = useSelector((state) => state.productSearch);
+    const { product, filteredProductsCount, resultPerPage } = useSelector((state) => state.productSearch);
     useEffect(() => {
         if (!debouncedValue.trim()) {
             return;
@@ -62,12 +62,12 @@ function Search() {
                 render={(attrs) => (
                     <div className={cx('search__result')} tabIndex="-1" {...attrs}>
                         <PopperWrapper>
-                            {products.length === 0 ? (
+                            {product.length === 0 ? (
                                 <p className={cx('search__notification')}>No Products</p>
                             ) : (
-                                products?.map((item) => <SearchItem data={item} key={item._id} />)
+                                product?.map((item) => <SearchItem data={item} key={item._id} />)
                             )}
-                            {filteredProductsCount >= resultPerPage ? (
+                            {filteredProductsCount >= resultPerPage && product.length > 0 ? (
                                 <div className={cx('search__all')} onClick={searchSubmitHandler}>
                                     See All Products
                                 </div>

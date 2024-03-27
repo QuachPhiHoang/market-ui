@@ -27,6 +27,7 @@ function ProductView({ product }) {
         readOnly: true,
         precision: 0.5,
     };
+    // console.log(product);
 
     const navigate = useNavigate();
 
@@ -83,8 +84,8 @@ function ProductView({ product }) {
                     <p className={cx('product__details__sale__info')}>{product.sale}%</p>
                 </div>
                 <Carousel autoPlay className={cx('product__details__images__main')}>
-                    {product.img &&
-                        product?.img.map((item, index) => (
+                    {product.images &&
+                        product?.images.map((item, index) => (
                             <div key={item._id}>
                                 <img src={item.url} alt={`${item[index]}`} />
                             </div>
@@ -103,10 +104,12 @@ function ProductView({ product }) {
                     <p className={cx('product__details__vote__quantity')}>{`(${product.numOfReviews})`}</p>
                 </div>
                 <div className={cx('product__details__price')}>
-                    <del className={cx('product__details__price__old')}>{`$${product.oldPrice}.00`}</del>
                     <p className={cx('product__details__price__cur')}>{`$${product.price}.00`}</p>
+                    {product.newPrice !== 0 ? (
+                        <del className={cx('product__details__price__old')}>{`$${product.newPrice}.00`}</del>
+                    ) : null}
                 </div>
-                <div className={cx('product__details__description__description')}>{product.desc}</div>
+                <div className={cx('product__details__description__description')}>{`Description: ${product.desc}`}</div>
                 <div className={cx('product__details__color')}>
                     <label className={cx('product__details__color__title')}>Select Colors:</label>
                     {product.colors &&

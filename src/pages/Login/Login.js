@@ -49,7 +49,7 @@ function Login() {
             if (isAuthenticated) {
                 navigate('/');
             }
-        }, 1000);
+        }, 2000);
 
         return () => {
             clearTimeout(handleNavigate);
@@ -61,7 +61,7 @@ function Login() {
             <div className={cx('login__img')}>
                 <img src={images.page_login} alt="login-page" />
             </div>
-            <form className={cx('login__form')}>
+            <div className={cx('login__form')}>
                 <Link className={cx('login__form__brand')} to={'/'}>
                     <img src={icons.logo} alt="brand" />
                 </Link>
@@ -76,28 +76,30 @@ function Login() {
                     <p>or</p>
                     <div className={cx('login__form__horizontal-gap__line')}></div>
                 </div>
-                <input
-                    className={cx('login__form__user')}
-                    type="text"
-                    placeholder="Username"
-                    value={loginUser}
-                    onChange={(e) => setLoginUser(e.target.value)}
-                />
-                <div className={cx('login__form__password')}>
+                <form onSubmit={handleLoginSubmit} encType="multipart/form-data">
                     <input
-                        className={cx('login__form__password__input')}
-                        type={valuePassword.showPassword ? 'text' : 'password'}
-                        placeholder="Password"
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
+                        className={cx('login__form__user')}
+                        type="text"
+                        placeholder="Username"
+                        value={loginUser}
+                        onChange={(e) => setLoginUser(e.target.value)}
                     />
-                    <img
-                        src={icons.showPassword}
-                        alt={'show password'}
-                        className={cx('register__form__confirm-password__icon')}
-                        onClick={handleShowPassword}
-                    />
-                </div>
+                    <div className={cx('login__form__password')}>
+                        <input
+                            className={cx('login__form__password__input')}
+                            type={valuePassword.showPassword ? 'text' : 'password'}
+                            placeholder="Password"
+                            value={loginPassword}
+                            onChange={(e) => setLoginPassword(e.target.value)}
+                        />
+                        <img
+                            src={icons.showPassword}
+                            alt={'show password'}
+                            className={cx('register__form__confirm-password__icon')}
+                            onClick={handleShowPassword}
+                        />
+                    </div>
+                </form>
                 <div className={cx('login__form__checked')}>
                     <div className={cx('login__form__checked__remember')}>
                         <label>Remember for 30 days</label>
@@ -117,7 +119,7 @@ function Login() {
                         Sign up for free
                     </Button>
                 </div>
-            </form>
+            </div>
             <ToastContainer draggable={false} position="top-right" autoClose={3000} />
         </div>
     );

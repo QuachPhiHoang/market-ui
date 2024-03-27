@@ -9,9 +9,11 @@ function SearchItem({ data }) {
         <>
             <Link to={`categories/${data._id}`}>
                 <div className={cx('search__item')}>
-                    <div className={cx('search__item__img')}>
-                        <img src={data.img[0].url} alt={data.name} />
-                    </div>
+                    {data.images && data.images.length > 0 ? (
+                        <div className={cx('search__item__img')}>
+                            <img src={data.images[0].url} alt={data.name} />
+                        </div>
+                    ) : null}
                     <p className={cx('search__item__name')}>{data.name}</p>
                 </div>
             </Link>
