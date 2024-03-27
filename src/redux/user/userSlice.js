@@ -4,6 +4,7 @@ import axiosInstance from '~/service/axiosInterceptor';
 
 const initialState = {
     user: {},
+    allUsers: [],
     isAuthenticated: false,
     error: null,
     isLoggedIn: false,
@@ -69,6 +70,15 @@ export const loadUser = createAsyncThunk('user/LoadUser', async () => {
 export const refreshToken = createAsyncThunk('user/RefreshToken', async () => {
     try {
         const { data } = await axiosInstance.get('auth/refresh', { withCredentials: true });
+        return data;
+    } catch (error) {
+        return error.response.data.message;
+    }
+});
+
+export const getAdminUsers = createAsyncThunk('user/GetAdminUser', async () => {
+    try {
+        const { data } = await axiosInstance.get('users', { withCredentials: true });
         return data;
     } catch (error) {
         return error.response.data.message;
@@ -152,6 +162,17 @@ export const userSlice = createSlice({
             state.status = 'failed';
             state.user.accessToken = null;
             state.isAuthenticated = false;
+        });
+        builder.addCase(getAdminUsers.pending, (state, action) => {
+            state.status = 'peding';
+        });
+        builder.addCase(getAdminUsers.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.allUsers = action.payload.users;
+        });
+        builder.addCase(getAdminUsers.rejected, (state, action) => {
+            state.status = 'succeeded';
+            state.allUsers = null;
         });
     },
 });

@@ -1,4 +1,4 @@
-.product__list {
+.product__list__details {
     width: var(--width);
     margin: auto;
     margin-top: 40px;
@@ -122,10 +122,11 @@
         line-height: calc(28 / 24);
         &__old {
             color: #555;
+            margin-left: 14px;
         }
         &__cur {
             color: var(--primary-color);
-            margin-left: 14px;
+            // margin-left: 14px;
         }
     }
 

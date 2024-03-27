@@ -1,23 +1,22 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams, useNavigate, Link, Navigate } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import classNames from 'classnames/bind';
 
 import Button from '~/components/Button';
-import CheckBox from '~/components/CheckBox';
+// import CheckBox from '~/components/CheckBox';
 import styles from './Catalog.scss';
-import categoryData from '~/fakeDataCategory';
-import { getProducts } from '~/redux/product-modal/productsSlice';
-import colorData from '~/fakeDataColor';
-import sizeData from '~/fakeDataSize';
-import genderData from '~/fakeGenderData';
+// import { getProducts } from '~/redux/product-modal/productsSlice';
+import { getAllProductsSearching } from '~/redux/product-modal/productSearchSlice';
 import InfinityList from '~/components/InfinityList';
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 
 const cx = classNames.bind(styles);
+const categories = ['Áo Thun', 'Áo Sơ Mi', 'Áo Polo', 'Áo Hoodie', 'Áo Khoác', 'Quần Jean'];
+const genders = ['Female', 'Male'];
 
 function Catalog() {
     const dispatch = useDispatch();
@@ -29,26 +28,61 @@ function Catalog() {
     const keyword = searchParams.get('keyword');
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [categories, setCategories] = useState('');
+    const [category, setCategory] = useState('');
     const [gender, setGender] = useState('');
 
-    const { products, productsCount, resultPerPage, filteredProductsCount } = useSelector((state) => state.products);
+    const { products, resultPerPage, filteredProductsCount } = useSelector((state) => state.products);
     const setCurrentPageNo = (e, value) => {
         setCurrentPage(value);
     };
 
     let count = filteredProductsCount;
+    const marksPrice = [
+        {
+            value: 0,
+            label: '0',
+        },
+        {
+            value: 100,
+            label: '100',
+        },
+        {
+            value: 200,
+            label: '200',
+        },
+        {
+            value: 300,
+            label: '300',
+        },
+        {
+            value: 400,
+            label: '400',
+        },
+        {
+            value: 500,
+            label: '500',
+        },
+    ];
+    const markRating = [
+        { value: 0, label: '0' },
+        { value: 1, label: '1' },
+        { value: 2, label: '2' },
+        { value: 3, label: '3' },
+        { value: 4, label: '4' },
+        { value: 5, label: '5' },
+    ];
 
     useEffect(() => {
-        dispatch(getProducts({ keyword, currentPage: activePage, price, ratings, categories, gender }));
-    }, [dispatch, currentPage, keyword, price, ratings, activePage, categories, gender]);
+        dispatch(getAllProductsSearching({ keyword, currentPage: activePage, price, ratings, category, gender }));
+    }, [dispatch, currentPage, keyword, price, ratings, activePage, category, gender]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [products]);
+    console.log('products', products);
 
     const handleRemoveCheck = () => {
-        setCategories('');
+        setCategory('');
         setGender('');
         setPrice([0, 500]);
         setRatings(0);
@@ -63,12 +97,16 @@ function Catalog() {
 
     const handleChangeCategory = (e) => {
         if (e.target.checked) {
-            setCategories(e.target.value);
+            setCategory(e.target.value);
+        } else {
+            setCategory('');
         }
     };
     const handleChangeGender = (e) => {
         if (e.target.checked) {
             setGender(e.target.value);
+        } else {
+            setGender('');
         }
     };
 
@@ -78,16 +116,16 @@ function Catalog() {
                 <div className={cx('catalog__filter__widget')}>
                     <div className={cx('catalog__filter__widget__title')}>Category Product</div>
                     <div className={cx('catalog__filter__widget__content')}>
-                        {categoryData.map((item, index) => (
+                        {categories.map((item, index) => (
                             <div key={index} className={cx('catalog__filter__widget__content__item')}>
                                 <input
-                                    type="radio"
-                                    value={item.categorySlug}
-                                    name={item.display}
+                                    type="checkbox"
+                                    value={item}
+                                    name={item}
                                     onChange={handleChangeCategory}
-                                    checked={item.categorySlug === categories}
+                                    checked={item === category}
                                 />
-                                <label>{item.display}</label>
+                                <label>{item}</label>
                             </div>
                         ))}
                     </div>
@@ -96,16 +134,16 @@ function Catalog() {
                 <div className={cx('catalog__filter__widget')}>
                     <div className={cx('catalog__filter__widget__title')}>Category Gender</div>
                     <div className={cx('catalog__filter__widget__content')}>
-                        {genderData.map((item, index) => (
+                        {genders.map((item, index) => (
                             <div key={index} className={cx('catalog__filter__widget__content__item')}>
                                 <input
-                                    type="radio"
-                                    value={item.gender}
-                                    name={item.display}
+                                    type="checkbox"
+                                    value={item}
+                                    name={item}
                                     onChange={handleChangeGender}
-                                    checked={item.gender === gender}
+                                    checked={item === gender}
                                 />
-                                <label>{item.display}</label>
+                                <label>{item}</label>
                             </div>
                         ))}
                     </div>
@@ -113,6 +151,7 @@ function Catalog() {
                 <div className={cx('catalog__filter__widget')}>
                     <Typography className={cx('catalog__filter__widget__title')}>Category Price</Typography>
                     <Slider
+                        aria-label="Always visible"
                         className={cx('form-range')}
                         min={0}
                         max={500}
@@ -121,7 +160,7 @@ function Catalog() {
                         valueLabelDisplay="auto"
                         getAriaLabel={() => 'range-slider'}
                         step={100}
-                        marks
+                        marks={marksPrice}
                         getAriaValueText={(price) => `${price}$`}
                         defaultValue={0}
                     />
@@ -137,7 +176,7 @@ function Catalog() {
                         valueLabelDisplay="auto"
                         getAriaLabel={() => 'range-slider'}
                         step={1}
-                        marks
+                        marks={markRating}
                     />
                 </div>
                 <div className={cx('catalog__filter__widget')}>

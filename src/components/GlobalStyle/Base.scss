@@ -8,13 +8,13 @@
 }
 
 $colors: (
-    'blue': #4267b2,
-    'pink': #fe7e73,
-    'white': #fff,
-    'black': #000,
-    'red': #ff0000,
-    'yellow': #ff0,
-    'green': #15ff00,
+    'Blue': #4267b2,
+    'Pink': #fe7e73,
+    'White': #fff,
+    'Black': #000,
+    'Red': #ff0000,
+    'Yellow': #ff0,
+    'Green': #15ff00,
 );
 
 @each $color, $val in $colors {

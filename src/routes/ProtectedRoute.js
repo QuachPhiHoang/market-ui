@@ -5,14 +5,10 @@ import { Navigate } from 'react-router-dom';
 function ProtectedRoute({ children, isAdmin }) {
     const { loading, isAuthenticated, user } = useSelector((state) => state.user);
     if (isAuthenticated === false) {
-        console.log('au', 1);
-        return <Navigate to="/login" />;
+        return <Navigate to="/" replace={true} />;
     } else if (isAdmin === true && user?.user?.role !== 'admin') {
-        console.log('is', 1);
-
-        return <Navigate to="/login" />;
+        return <Navigate to="/" replace={true} />;
     }
-    console.log('do', 1);
 
     return children;
 }

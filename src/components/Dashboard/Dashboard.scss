@@ -1,0 +1,86 @@
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    width: var(--width);
+    max-width: 100%;
+    margin: auto;
+    margin-top: 40px;
+    position: absolute;
+    &__container {
+        border-left: 1px solid rgba(0, 0, 0, 0.13);
+        background-color: rgb(255, 255, 255);
+        padding: 3rem 0;
+        &__title {
+            color: rgba(0, 0, 0, 0.733);
+            text-align: center;
+            width: 50%;
+            padding: 16px;
+            margin: auto;
+            font-size: 3.2rem;
+            font-weight: 700;
+            line-height: calc(49 / 32);
+        }
+        &__summary {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            justify-content: center;
+            div > p {
+                background-color: var(--primary-color);
+                color: white;
+                text-align: center;
+                padding: 15px;
+                width: 100%;
+                margin: 0 20px;
+            }
+            &__box {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                margin: 20px;
+                margin-left: 60px;
+                a {
+                    text-align: center;
+                    background-color: rgb(255, 233, 174);
+                    padding: 15px;
+                    width: 80px;
+                    height: 80px;
+                    margin: 20px;
+                    border-radius: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    p {
+                        color: var(--text-color);
+                    }
+                }
+                a:first-child {
+                    background-color: var(--primary-color);
+                    p {
+                        color: var(--white-color);
+                    }
+                }
+                a:last-child {
+                    background-color: rgb(51, 51, 51);
+                    p {
+                        color: var(--white-color);
+                    }
+                }
+            }
+        }
+    }
+}
+.line-chart {
+    width: 80%;
+    margin: auto;
+}
+
+.doughnut-chart {
+    margin-top: 40px !important;
+    width: 500px;
+    height: 500px;
+    margin: auto;
+}

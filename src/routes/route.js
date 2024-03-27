@@ -19,7 +19,13 @@ import SuccessPage from '~/pages/Success';
 import OrdersPage from '~/pages/OrdersPage';
 import OrderDetailsPage from '~/pages/OrderDetails';
 import AdminPage from '~/pages/Admin';
-
+import AdminProductsPage from '~/pages/Admin/AdminProductsPage';
+import AdminNewProductPage from '~/pages/Admin/AdminProductsPage/AdminNewProductPage';
+import AdminProductPageDetails from '~/pages/Admin/AdminProductsPage/AdminProductPageDetails';
+import AdminColorsPage from '~/pages/Admin/AdminColor';
+import AdminCreateColorPage from '~/pages/Admin/AdminColor/AdminNewColorPage';
+import AdminNewSizePage from '~/pages/Admin/AdminSize/AdminNewSizePage';
+import AdminSizesPage from '~/pages/Admin/AdminSize/AdminSize';
 const publicRoute = [
     { path: '/', component: HomePage },
     { path: '/about', component: AboutPage },
@@ -42,6 +48,13 @@ const publicRoute = [
     { path: '/orders', component: OrdersPage, isAuthenticated: true },
     { path: '/order/:id', component: OrderDetailsPage, isAuthenticated: true },
     { path: '/admin/dashboard', component: AdminPage, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/products', component: AdminProductsPage, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/create-product', component: AdminNewProductPage, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/product/:id', component: AdminProductPageDetails, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/colors', component: AdminColorsPage, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/create-color', component: AdminCreateColorPage, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/sizes', component: AdminSizesPage, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/create-size', component: AdminNewSizePage, isAuthenticated: true, isAdmin: true },
 ];
 
 export { publicRoute };

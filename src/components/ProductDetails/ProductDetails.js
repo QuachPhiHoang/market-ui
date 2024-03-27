@@ -40,7 +40,7 @@ function ProductDetails() {
     }, []);
 
     return product ? (
-        <div className="product__list">
+        <div className="product__list__details">
             <ProductView product={product} />
 
             <div className={cx('product__description')}>
@@ -85,7 +85,7 @@ function ProductDetails() {
                 </div>
             </div>
             <Button
-                className={cx(`product__list__btn__new-review ${toggleState === 2 ? 'active' : ''}`)}
+                className={cx(`product__list__details__btn__new-review ${toggleState === 2 ? 'active' : ''}`)}
                 primary
                 onClick={() => {
                     setOpenModalReviews(true);

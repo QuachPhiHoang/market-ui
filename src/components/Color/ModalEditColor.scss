@@ -1,0 +1,41 @@
+.modal-edit {
+    margin: auto;
+    margin-top: 150px;
+    width: 600px;
+    height: 400px;
+    background-color: #fff;
+    border: 1px solid #000 !important;
+    border-radius: 8px;
+    &__title {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 3.2rem;
+        font-weight: 600;
+    }
+    &__form {
+        margin: 40px 20px 0 20px;
+        display: flex;
+        align-items: center;
+    }
+    &__label {
+        font-size: 2.4rem;
+        font-weight: 500;
+    }
+    &__input {
+        border: 1px solid #000;
+        font-size: 2.4rem;
+        margin-left: 30px;
+        padding-left: 10px;
+        border-radius: 4px;
+        width: 80%;
+        ::placeholder {
+            font-size: 1.6rem;
+        }
+    }
+    &__btn {
+        display: flex;
+        margin-top: 100px;
+        margin-left: 30px;
+        text-align: center;
+    }
+}

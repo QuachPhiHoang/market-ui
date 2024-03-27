@@ -19,7 +19,6 @@ function OrderDetails() {
     }, [dispatch, id]);
 
     const { order } = useSelector((state) => state.orderDetails);
-    console.log(order);
 
     return (
         <div>

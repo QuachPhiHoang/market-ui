@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from '~/components/Catalog/Catalog.scss';
 
-import NewProductItem from '~/components/NewProduct/NewProductItem';
+import NewProductItem from '~/components/Products/ProductItem';
 
 const cx = classNames.bind(styles);
 

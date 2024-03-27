@@ -1,0 +1,66 @@
+.sidebar {
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    padding: 4rem 0;
+    margin: auto;
+    margin-top: 40px;
+    &__dashboard {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        width: 30px;
+        transition: all 0.5s;
+        img {
+            width: 40px;
+            height: 40px;
+        }
+
+        &__title {
+            font-size: 2rem;
+            font-weight: 500;
+            line-height: calc(19 / 14);
+        }
+        &__products,
+        &__color,
+        &__size,
+        &__orders,
+        &__user,
+        &__color,
+        &__reviews {
+            margin-right: 0.5rem;
+            padding: 2rem;
+            color: rgba(0, 0, 0, 0.493);
+            svg {
+                padding-right: 4px;
+            }
+            p {
+                display: flex;
+                align-items: center;
+            }
+            &:hover {
+                p {
+                    color: var(--primary-color);
+                }
+            }
+        }
+    }
+}
+.MuiTreeItem-label {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 1.6rem !important;
+    font-weight: 500 !important;
+    line-height: calc(19 / 14) !important;
+    padding: 4px 0 !important;
+}
+.MuiTreeItem-content {
+    padding: 0 !important;
+    background-color: none;
+}
+.MuiTreeItem-iconContainer {
+    margin: 0 !important;
+}
+
+.MuiTypography-root {
+    background-color: #fff !important;
+}

@@ -15,7 +15,6 @@ export const createReview = createAsyncThunk('put/newReview', async (obj, { reje
     };
     try {
         const { data } = await axiosInstance.put(`products/review/${obj.id}`, obj.myForm, config);
-        console.log(data);
         return data;
     } catch (error) {
         return rejectWithValue(error.response.data.message);

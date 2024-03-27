@@ -41,9 +41,9 @@ function Orders() {
             headerName: 'Status',
             flex: 0.5,
             minWidth: 150,
-            cellClassName: (params) => {
-                return params.formattedValue === 'Delivered' ? 'greenColor' : 'redColor';
-            },
+            // cellClassName: (params) => {
+            //     return params.formattedValue === 'Delivered' ? 'greenColor' : 'redColor';
+            // },
         },
         {
             field: 'itemsQty',
