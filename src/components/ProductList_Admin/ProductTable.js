@@ -1,25 +1,15 @@
 import classNames from 'classnames/bind';
+import { useState } from 'react';
 import styles from './ProductsList.scss';
-import { Fragment, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import Button from '~/components/Button';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAdminProducts, deleteProducts, reset } from '~/redux/product-modal/productsSlice';
-import { ToastContainer, toast } from 'react-toastify';
 
+import { CardOverflow, Sheet, Stack, Table } from '@mui/joy';
 import {
     createColumnHelper,
     flexRender,
     getCoreRowModel,
-    useReactTable,
     getExpandedRowModel,
+    useReactTable,
 } from '@tanstack/react-table';
-import { Sheet, Table, CardOverflow, Stack } from '@mui/joy';
 
 const cx = classNames.bind(styles);
 const columnHelper = createColumnHelper();
@@ -28,50 +18,60 @@ const columns = [
         id: 'images',
         header: 'Images',
         cell: ({ row }) => (
-            <Stack alignItems={'center'} direction="row" spacing={2}>
-                {
-                    <CardOverflow sx={{ width: 70, height: 70 }}>
-                        <img src={row?.original?.images[0].url} alt="images" />
-                    </CardOverflow>
-                }
-            </Stack>
+            <>
+                {row?.original?.images?.length ? (
+                    <Stack alignItems={'center'} direction="row" spacing={2}>
+                        {
+                            <CardOverflow sx={{ width: 70, height: 70 }}>
+                                <img src={row?.original?.images[0].url} alt="images" />
+                            </CardOverflow>
+                        }
+                    </Stack>
+                ) : null}
+            </>
         ),
     }),
 
-    columnHelper.accessor('_id', {
-        id: '_id',
-        header: '_id',
-        cell: ({ row }) => (
-            <Stack>
-                {row.getCanExpand() ? (
-                    <button onClick={row.getToggleExpandedHandler()}>co</button>
-                ) : (
-                    <button>khong</button>
-                )}
-                <span>{row.original._id}</span>
-            </Stack>
-        ),
-    }),
+    // columnHelper.accessor('_id', {
+    //     id: '_id',
+    //     header: '_id',
+    //     cell: ({ row }) => (
+    //         <Stack>
+    //             <span>{row.original._id}</span>
+    //         </Stack>
+    //     ),
+    // }),
     columnHelper.accessor('SKU', {
         id: 'SKU',
         header: 'SKU',
     }),
-    // columnHelper.accessor('variants', {
-    //     id: 'variants',
-    //     header: 'Variants',
-    //     // cell: ({ row }) => (
-    //     //     <Stack>
-    //     //         {row?.originalSubRows &&
-    //     //             row?.originalSubRows.map((subRow) => (
-    //     //                 <div key={subRow._id}>
-    //     //                     {/* <span>{JSON.stringify(subRow)}</span> */}
-    //     //                     <span>{JSON.stringify(subRow.size.name)}</span>
-    //     //                     <span>{JSON.stringify(subRow.color.name)}</span>
-    //     //                 </div>
-    //     //             ))}
-    //     //     </Stack>
-    //     // ),
-    // }),
+    columnHelper.accessor('variants', {
+        id: 'variants',
+        header: 'Variants',
+        cell: ({ row }) => {
+            return (
+                <Stack>
+                    {row.depth === 0 && row?.originalSubRows?.length ? (
+                        row.getCanExpand() ? (
+                            <button onClick={() => row.toggleExpanded()}>{row.getIsExpanded() ? 'Ẩn' : 'Hiện'}</button>
+                        ) : null
+                    ) : row.depth === 0 && !row?.originalSubRows?.length ? (
+                        <button>không</button>
+                    ) : (
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <span>Color: {JSON.stringify(row.original.color.name)}</span>
+                            <span>Size: {JSON.stringify(row.original.size.name)}</span>
+                        </div>
+                    )}
+                </Stack>
+            );
+        },
+    }),
 
     columnHelper.accessor('name', {
         id: 'name',
