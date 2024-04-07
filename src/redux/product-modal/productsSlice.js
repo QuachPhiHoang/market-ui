@@ -61,7 +61,7 @@ export const updateProduct = createAsyncThunk('products/updateProduct', async (o
         withCredentials: true,
     };
     try {
-        const { data } = await axiosInstance.put(`products/${obj.id}`, obj.myForm, config);
+        const { data } = await axiosInstance.patch(`products/${obj.id}`, obj.myForm, config);
         return data;
     } catch (error) {
         return rejectWithValue(error.response.data.message);

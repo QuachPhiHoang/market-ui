@@ -26,6 +26,7 @@ import AdminColorsPage from '~/pages/Admin/AdminColor';
 import AdminCreateColorPage from '~/pages/Admin/AdminColor/AdminNewColorPage';
 import AdminNewSizePage from '~/pages/Admin/AdminSize/AdminNewSizePage';
 import AdminSizesPage from '~/pages/Admin/AdminSize/AdminSize';
+import AdminNewProductVariants from '~/pages/Admin/AdminProductsPage/AdminNewProductVariants';
 const publicRoute = [
     { path: '/', component: HomePage },
     { path: '/about', component: AboutPage },
@@ -50,7 +51,15 @@ const publicRoute = [
     { path: '/admin/dashboard', component: AdminPage, isAuthenticated: true, isAdmin: true },
     { path: '/admin/products', component: AdminProductsPage, isAuthenticated: true, isAdmin: true },
     { path: '/admin/create-product', component: AdminNewProductPage, isAuthenticated: true, isAdmin: true },
-    { path: '/admin/product/:id', component: AdminProductPageDetails, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/products/:id/edit', component: AdminProductPageDetails, isAuthenticated: true, isAdmin: true },
+    { path: '/admin/products/:id/delete', component: AdminProductPageDetails, isAuthenticated: true, isAdmin: true },
+    {
+        path: '/admin/products/:id/create-variant',
+        component: AdminNewProductVariants,
+        isAuthenticated: true,
+        isAdmin: true,
+    },
+
     { path: '/admin/colors', component: AdminColorsPage, isAuthenticated: true, isAdmin: true },
     { path: '/admin/create-color', component: AdminCreateColorPage, isAuthenticated: true, isAdmin: true },
     { path: '/admin/sizes', component: AdminSizesPage, isAuthenticated: true, isAdmin: true },

@@ -30,7 +30,7 @@ function Color() {
             const data = await dispatch(createColor(myForm)).unwrap();
 
             if (data?.success) {
-                toast.success('Color created successfully', { draggable: true, position: toast.POSITION.TOP_RIGHT });
+                toast.success('Color created successfully');
                 setTimeout(() => {
                     navigate('/admin/dashboard');
                 }, 3000);
