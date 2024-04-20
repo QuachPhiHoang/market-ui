@@ -27,6 +27,7 @@ import AdminCreateColorPage from '~/pages/Admin/AdminColor/AdminNewColorPage';
 import AdminNewSizePage from '~/pages/Admin/AdminSize/AdminNewSizePage';
 import AdminSizesPage from '~/pages/Admin/AdminSize/AdminSize';
 import AdminNewProductVariants from '~/pages/Admin/AdminProductsPage/AdminNewProductVariants';
+import AdminProductVariantPageDetails from '~/pages/Admin/AdminProductsPage/AdminProductVariantPageDetails';
 const publicRoute = [
     { path: '/', component: HomePage },
     { path: '/about', component: AboutPage },
@@ -56,6 +57,18 @@ const publicRoute = [
     {
         path: '/admin/products/:id/create-variant',
         component: AdminNewProductVariants,
+        isAuthenticated: true,
+        isAdmin: true,
+    },
+    {
+        path: '/admin/products/:id/edit-variant',
+        component: AdminProductVariantPageDetails,
+        isAuthenticated: true,
+        isAdmin: true,
+    },
+    {
+        path: '/admin/products/:id/delete-variant',
+        component: AdminProductVariantPageDetails,
         isAuthenticated: true,
         isAdmin: true,
     },

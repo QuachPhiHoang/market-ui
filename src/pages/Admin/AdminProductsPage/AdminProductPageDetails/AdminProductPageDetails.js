@@ -1,5 +1,5 @@
 import Header from '~/components/Header/Header';
-import UpdateProduct from '~/components/UpdateProduct/UpdateProduct';
+import UpdateProduct from '~/components/ProductList_Admin/UpdateProduct/UpdateProduct';
 
 function ProductPageDetails() {
     return (

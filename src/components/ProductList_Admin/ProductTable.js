@@ -1,17 +1,22 @@
 import React, { useState, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ProductTable.scss';
+import FilterProduct from './FilterProduct';
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-import { CardOverflow, Sheet, Stack, Table, IconButton, Button } from '@mui/joy';
+import { CardOverflow, Sheet, Stack, Table, IconButton, Box } from '@mui/joy';
 import {
+    // FilterFn,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
     getExpandedRowModel,
     useReactTable,
+    getFilteredRowModel,
 } from '@tanstack/react-table';
+
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -87,7 +92,7 @@ function ProductsTable({ data }) {
                 (row) =>
                     row?.variants?.length
                         ? row?.variants.reduce((t, v) => {
-                              return [...t, v.size.name].join(', ');
+                              return [...t, v.size.name];
                           }, [])
                         : row?.size?.name,
                 {
@@ -131,19 +136,10 @@ function ProductsTable({ data }) {
                             </div>
                         ) : row.depth === 0 && !row?.getParentRow()?.length ? null : (
                             <div>
-                                <IconButton
-                                    color="success"
-                                    // component={Link}
-                                    // to={`${row.original._id}/edit`}
-                                >
+                                <IconButton color="success" component={Link} to={`${row.original._id}/edit-variant`}>
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton
-                                    color="danger"
-
-                                    //   component={Link}
-                                    // to={`${row.original._id}/delete`}
-                                >
+                                <IconButton color="danger" component={Link} to={`${row.original._id}/delete-variant`}>
                                     <DeleteIcon />
                                 </IconButton>
                             </div>
@@ -154,22 +150,47 @@ function ProductsTable({ data }) {
         ],
         [],
     );
-    // const [direction, setDirection] = useState(false);
+    // const filterTypes = React.useMemo(
+    //     () => ({
+    //         includes: (rows, id, filterValue) => {
+    //             return rows.filter((row) => {
+    //                 const rowValue = row.values[id];
+    //                 return rowValue !== undefined
+    //                     ? String(rowValue).toLowerCase().includes(String(filterValue).toLowerCase())
+    //                     : true;
+    //             });
+    //         },
+
+    //         startsWith: (rows, id, filterValue) => {
+    //             return rows.filter((row) => {
+    //                 const rowValue = row.values[id];
+    //                 return rowValue !== undefined
+    //                     ? String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase())
+    //                     : true;
+    //             });
+    //         },
+    //     }),
+    //     [],
+    // );
     const [expanded, setExpanded] = useState({});
+    const [columnFilters, setColumnFilters] = useState([]);
     const table = useReactTable({
         data,
         columns,
         state: {
             expanded,
+            columnFilters,
+            // filterTypes
         },
         getSubRows: (row) => row.variants,
         onExpandedChange: setExpanded,
         getCoreRowModel: getCoreRowModel(),
         getExpandedRowModel: getExpandedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
     });
     return (
-        <>
-            {/* <Button sx={{ mb: 2 }}>Create Product</Button> */}
+        <Box>
+            <FilterProduct columnFilters={columnFilters} setColumnFilters={setColumnFilters} />
             <Sheet className={cx('product-table')}>
                 <Table className={cx('product-table__table')}>
                     <thead className={cx('product-table__table__thead')}>
@@ -194,7 +215,7 @@ function ProductsTable({ data }) {
                     </tbody>
                 </Table>
             </Sheet>
-        </>
+        </Box>
     );
 }
 

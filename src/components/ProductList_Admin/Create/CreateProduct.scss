@@ -101,12 +101,11 @@
                 align-items: center;
                 justify-content: center;
                 overflow: auto;
-                flex-direction: column;
                 margin-top: 12px;
 
                 img {
-                    width: 100%;
-                    height: 60%;
+                    width: 50%;
+                    height: 50%;
                     object-fit: contain;
                 }
             }
@@ -124,6 +123,7 @@
                 font-weight: 400;
                 line-height: calc(29 / 16);
                 outline: none;
+                resize: none;
             }
         }
     }

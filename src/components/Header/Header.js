@@ -40,7 +40,7 @@ function Header() {
         },
     ];
 
-    if (user?.user?.role === 'admin') {
+    if (user?.role === 'admin') {
         menu.unshift({
             title: 'Dashboard',
             icon: icons.dashboard,

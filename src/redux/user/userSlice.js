@@ -8,6 +8,7 @@ const initialState = {
     isAuthenticated: false,
     error: null,
     isLoggedIn: false,
+    accessToken: null,
 };
 
 export const login = createAsyncThunk('user/LoginUser', async ({ username, password }, { rejectWithValue }) => {
@@ -96,9 +97,10 @@ export const userSlice = createSlice({
         });
         builder.addCase(login.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.user = action.payload;
+            state.user = action.payload.user;
             state.isAuthenticated = true;
             state.isLoggedIn = true;
+            state.accessToken = action.payload.accessToken;
         });
         builder.addCase(login.rejected, (state, action) => {
             state.status = 'failed';
@@ -112,7 +114,7 @@ export const userSlice = createSlice({
         });
         builder.addCase(register.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.user = action.payload;
+            state.user = action.payload.user;
             state.isAuthenticated = true;
         });
         builder.addCase(register.rejected, (state, action) => {
@@ -139,7 +141,7 @@ export const userSlice = createSlice({
         });
         builder.addCase(loadUser.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.user = action.payload;
+            state.user = action.payload.user;
             state.isAuthenticated = true;
             state.error = null;
         });
@@ -151,7 +153,7 @@ export const userSlice = createSlice({
         });
         builder.addCase(refreshToken.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.user.accessToken = action.payload.accessToken;
+            state.accessToken = action.payload.accessToken;
             state.isAuthenticated = true;
         });
         builder.addCase(refreshToken.pending, (state, action) => {

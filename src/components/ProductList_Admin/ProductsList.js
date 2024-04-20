@@ -5,14 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './ProductsList.scss';
 import Sidebar from '../SideBar/Sidebar';
-import { getAdminProducts, deleteProducts, reset } from '~/redux/product-modal/productsSlice';
-import { ToastContainer, toast } from 'react-toastify';
+import { getAdminProducts } from '~/redux/product-modal/productsSlice';
+import { ToastContainer } from 'react-toastify';
 import ProductsTable from './ProductTable';
 
 const cx = classNames.bind(styles);
 
 function ProductsList() {
-    const { products, isDeleted } = useSelector((state) => state.products);
+    const { products } = useSelector((state) => state.products);
     const dispatch = useDispatch();
 
     useEffect(() => {

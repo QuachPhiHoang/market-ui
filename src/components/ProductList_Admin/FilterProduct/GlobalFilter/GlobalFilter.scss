@@ -1,0 +1,14 @@
+.global-filter {
+    margin-bottom: 10px;
+    &__box {
+        display: flex;
+        gap: 1;
+        justify-content: flex-start;
+    }
+    &__input {
+        width: 40%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 4px;
+    }
+}

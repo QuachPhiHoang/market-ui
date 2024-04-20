@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
 
 import Sidebar from '../../SideBar/Sidebar';
 import classNames from 'classnames/bind';
@@ -40,13 +41,6 @@ function CreateProduct() {
     const genders = ['Female', 'Male'];
     const navigate = useNavigate();
 
-    // const pushToArray = (items) => {
-    //     const item = [];
-    //     const data = items.split(',');
-    //     item.push(data);
-    //     return item;
-    // };
-
     const convertStringToArray = (items) => {
         return items.replace(' ', '').split(',');
     };
@@ -78,7 +72,7 @@ function CreateProduct() {
         });
         const data = await dispatch(createProduct(myForm)).unwrap();
         if (data.success) {
-            alert('Product Created Successfully');
+            toast.success('Product Created Successfully');
             navigate('/admin/products');
         }
     };
@@ -230,6 +224,7 @@ function CreateProduct() {
                     </Button>
                 </form>
             </div>
+            <ToastContainer draggable={false} position="top-right" autoClose={3000} />
         </div>
     );
 }
