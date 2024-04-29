@@ -1,222 +1,238 @@
-import React, { useState, useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ProductTable.scss';
 import FilterProduct from './FilterProduct';
+import GlobalFilter from '~/components/ProductList_Admin/FilterProduct/GlobalFilter';
+import PropTypes from 'prop-types';
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Sheet, Table, Box } from '@mui/joy';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
-import { CardOverflow, Sheet, Stack, Table, IconButton, Box } from '@mui/joy';
-import {
-    // FilterFn,
-    createColumnHelper,
-    flexRender,
-    getCoreRowModel,
-    getExpandedRowModel,
-    useReactTable,
-    getFilteredRowModel,
-} from '@tanstack/react-table';
-
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Link } from 'react-router-dom';
+import { useTable, useSortBy, useGlobalFilter, useFilters, useExpanded, usePagination } from 'react-table';
 
 const cx = classNames.bind(styles);
-const columnHelper = createColumnHelper();
 
-function ProductsTable({ data }) {
-    const columns = useMemo(
-        () => [
-            columnHelper.accessor('images', {
-                id: 'images',
-                header: 'Images',
-                cell: ({ row }) => (
-                    <>
-                        {row?.original?.images?.length ? (
-                            <Stack className={cx('product-table__table__image')}>
-                                {
-                                    <CardOverflow>
-                                        <img src={row?.original?.images[0].url} alt="images" />
-                                    </CardOverflow>
-                                }
-                            </Stack>
-                        ) : null}
-                    </>
-                ),
-            }),
+function ProductsTable({
+    columns,
+    data,
+    renderRowSubComponent,
+    rowOnClick,
+    rowClickHandler,
+    isFilter,
+    showPagination,
+}) {
+    const filterTypes = useMemo(
+        () => ({
+            includes: (rows, id, filterValue) => {
+                return rows.filter((row) => {
+                    const rowValue = row.values[id];
+                    return rowValue !== undefined
+                        ? String(rowValue).toLowerCase().includes(String(filterValue).toLowerCase())
+                        : true;
+                });
+            },
 
-            columnHelper.accessor('SKU', {
-                id: 'SKU',
-                header: 'SKU',
-            }),
-            columnHelper.accessor('variants', {
-                id: 'variants',
-                header: 'Variants',
-                cell: ({ row }) => {
-                    return (
-                        <Stack className={cx('product-table__table__variants')}>
-                            {row.depth === 0 && row?.originalSubRows?.length ? (
-                                row.getCanExpand() ? (
-                                    <button
-                                        className={cx('product-table__table__variants--btn')}
-                                        onClick={() => row.toggleExpanded()}
-                                    >
-                                        {row.getIsExpanded() ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
-                                    </button>
-                                ) : null
-                            ) : null}
-                        </Stack>
-                    );
-                },
-            }),
-
-            columnHelper.accessor('name', {
-                id: 'name',
-                header: 'Name',
-            }),
-
-            columnHelper.accessor(
-                (row) =>
-                    row?.variants?.length
-                        ? row?.variants.reduce((t, v) => {
-                              return t + v.stock;
-                          }, 0)
-                        : row.stock,
-                {
-                    id: 'stock',
-                    header: 'Stock',
-                },
-            ),
-            columnHelper.accessor(
-                (row) =>
-                    row?.variants?.length
-                        ? row?.variants.reduce((t, v) => {
-                              return [...t, v.size.name];
-                          }, [])
-                        : row?.size?.name,
-                {
-                    id: 'size',
-                    header: 'Size',
-                },
-            ),
-            columnHelper.accessor(
-                (row) =>
-                    row?.variants?.length
-                        ? row?.variants.reduce((t, v) => {
-                              return [...t, v.color.name];
-                          }, [])
-                        : row?.color?.name,
-                {
-                    id: 'color',
-                    header: 'Color',
-                },
-            ),
-
-            columnHelper.accessor('price', {
-                id: 'price',
-                header: 'Price',
-            }),
-            columnHelper.accessor('action', {
-                id: 'action',
-                header: <p style={{ textAlign: 'center' }}>Actions</p>,
-                cell: ({ row }) => (
-                    <Stack justifyContent={'center'} direction={'row'} spacing={1}>
-                        {row.depth === 0 ? (
-                            <div>
-                                <IconButton component={Link} to={`${row.original._id}/create-variant`}>
-                                    <AddIcon />
-                                </IconButton>
-                                <IconButton color="success" component={Link} to={`${row.original._id}/edit`}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton color="danger" component={Link} to={`${row.original._id}/delete`}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </div>
-                        ) : row.depth === 0 && !row?.getParentRow()?.length ? null : (
-                            <div>
-                                <IconButton color="success" component={Link} to={`${row.original._id}/edit-variant`}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton color="danger" component={Link} to={`${row.original._id}/delete-variant`}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </div>
-                        )}
-                    </Stack>
-                ),
-            }),
-        ],
+            startsWith: (rows, id, filterValue) => {
+                return rows.filter((row) => {
+                    const rowValue = row.values[id];
+                    return rowValue !== undefined
+                        ? String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase())
+                        : true;
+                });
+            },
+        }),
         [],
     );
-    // const filterTypes = React.useMemo(
-    //     () => ({
-    //         includes: (rows, id, filterValue) => {
-    //             return rows.filter((row) => {
-    //                 const rowValue = row.values[id];
-    //                 return rowValue !== undefined
-    //                     ? String(rowValue).toLowerCase().includes(String(filterValue).toLowerCase())
-    //                     : true;
-    //             });
-    //         },
-
-    //         startsWith: (rows, id, filterValue) => {
-    //             return rows.filter((row) => {
-    //                 const rowValue = row.values[id];
-    //                 return rowValue !== undefined
-    //                     ? String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase())
-    //                     : true;
-    //             });
-    //         },
-    //     }),
-    //     [],
-    // );
-    const [expanded, setExpanded] = useState({});
-    const [columnFilters, setColumnFilters] = useState([]);
-    const table = useReactTable({
-        data,
-        columns,
-        state: {
-            expanded,
-            columnFilters,
-            // filterTypes
+    const sortTypes = useMemo(
+        () => ({
+            dateSort: (a, b) => {
+                a = new Date(a).getTime();
+                b = new Date(b).getTime();
+                return b > a ? 1 : -1;
+            },
+        }),
+        [],
+    );
+    const defaultColumn = useMemo(
+        () => ({
+            Filter: FilterProduct,
+            disableFilters: true,
+        }),
+        [],
+    );
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        prepareRow,
+        setGlobalFilter,
+        page,
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        pageCount,
+        gotoPage,
+        nextPage,
+        previousPage,
+        setPageSize,
+        state: { globalFilter, pageIndex, pageSize },
+    } = useTable(
+        {
+            columns,
+            data,
+            defaultColumn,
+            filterTypes,
+            sortTypes,
+            autoResetPage: false,
         },
-        getSubRows: (row) => row.variants,
-        onExpandedChange: setExpanded,
-        getCoreRowModel: getCoreRowModel(),
-        getExpandedRowModel: getExpandedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-    });
+        useGlobalFilter,
+        useFilters,
+        useSortBy,
+        useExpanded,
+        usePagination,
+    );
+
     return (
         <Box>
-            <FilterProduct columnFilters={columnFilters} setColumnFilters={setColumnFilters} />
+            {isFilter ? <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} /> : null}
             <Sheet className={cx('product-table')}>
-                <Table className={cx('product-table__table')}>
+                <Table className={cx('product-table__table')} {...getTableProps()}>
                     <thead className={cx('product-table__table__thead')}>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => (
-                                    <th key={header.id}>
-                                        {flexRender(header.column.columnDef.header, header.getContext())}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                        {headerGroups &&
+                            headerGroups.map((headerGroup, i) => (
+                                <tr {...headerGroup.getHeaderGroupProps()} key={i}>
+                                    {headerGroup.headers.map((column) => (
+                                        <th key={column?.id} {...column.getHeaderProps()}>
+                                            <span {...column.getSortByToggleProps()}>
+                                                {column?.render('Header')}
+                                                {column.isSorted ? (
+                                                    column.isSortedDesc ? (
+                                                        <ArrowDownwardIcon />
+                                                    ) : (
+                                                        <ArrowUpwardIcon />
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </span>
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
                     </thead>
-                    <tbody>
-                        {table.getRowModel().rows.map((row) => (
-                            <tr key={row.id}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <th key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</th>
-                                ))}
-                            </tr>
-                        ))}
+                    <tbody {...getTableBodyProps()}>
+                        {page.map((row) => {
+                            prepareRow(row);
+                            return (
+                                <Fragment key={row.id}>
+                                    <tr
+                                        {...row.getRowProps()}
+                                        onClick={rowOnClick ? () => rowClickHandler(row.original) : () => ''}
+                                    >
+                                        {row.cells.map((cell) => {
+                                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                                        })}
+                                    </tr>
+                                    {row.isExpanded ? (
+                                        <tr>
+                                            <td>
+                                                <span className={cx('product-table__sub-table')}>
+                                                    {renderRowSubComponent({ row })}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ) : null}
+                                </Fragment>
+                            );
+                        })}
                     </tbody>
                 </Table>
             </Sheet>
+            {showPagination ? (
+                <ul className={cx('product-pagination')}>
+                    <li>
+                        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                            <KeyboardDoubleArrowLeftIcon />
+                        </button>
+                        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                            <KeyboardArrowLeftIcon />
+                        </button>
+                    </li>
+                    <li>
+                        <span>
+                            Page{' '}
+                            <strong>
+                                {pageIndex + 1} of {pageOptions.length}
+                            </strong>
+                        </span>
+                        <span>
+                            | Go to page:
+                            <span>
+                                <input
+                                    type="number"
+                                    defaultValue={pageIndex + 1}
+                                    onChange={(e) => {
+                                        const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                                        gotoPage(page);
+                                    }}
+                                />
+                            </span>
+                        </span>
+                        <span>
+                            <select
+                                value={pageSize}
+                                onChange={(e) => {
+                                    setPageSize(Number(e.target.value));
+                                }}
+                            >
+                                {[5, 10, 15, 20, 25, 50].map((pageSize) => (
+                                    <option key={pageSize} value={pageSize}>
+                                        Show {pageSize}
+                                    </option>
+                                ))}
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <button onClick={() => nextPage()} disabled={!canNextPage}>
+                            <KeyboardArrowRightIcon />
+                        </button>
+                        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                            <KeyboardDoubleArrowRightIcon />
+                        </button>
+                    </li>
+                </ul>
+            ) : (
+                ''
+            )}
         </Box>
     );
 }
+
+ProductsTable.defaultProps = {
+    rowOnClick: false,
+    showPagination: false,
+    expandRows: false,
+    expandedRowObj: {},
+};
+
+ProductsTable.propTypes = {
+    /** Specified if pagination should show or not */
+    showPagination: PropTypes.bool.isRequired,
+
+    /** Specifies if there should be a row onClick action*/
+    rowOnClick: PropTypes.bool.isRequired,
+
+    /** OPTIONAL: The onClick Action to be taken */
+    rowClickHandler: PropTypes.func,
+
+    /** header color background. There are six possible choices. Refer to ReadMe file for specifics */
+    headerColor: PropTypes.string,
+};
 
 export default ProductsTable;

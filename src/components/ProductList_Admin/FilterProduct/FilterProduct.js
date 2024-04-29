@@ -5,15 +5,7 @@ import { Box } from '@mui/joy';
 
 const cx = classNames.bind(styles);
 
-function Filter({ columnFilters, setColumnFilters }) {
-    const SKUName = columnFilters.find((f) => f.id === 'SKU')?.value || '';
-
-    const onFilterChange = (id, value) => {
-        const searchKeyword = value;
-        if (!searchKeyword.startsWith(' ')) {
-            return setColumnFilters((prev) => prev.filter((f) => f.id !== id).concat({ id, value }));
-        }
-    };
+function Filter({ column: { filterValue, setFilter } }) {
     return (
         <div className={cx('filter')}>
             <Box className={cx('filter__box')}>
@@ -21,8 +13,8 @@ function Filter({ columnFilters, setColumnFilters }) {
                     className={cx('filter__input')}
                     type="text"
                     placeholder="Search your SKU"
-                    value={SKUName}
-                    onChange={(e) => onFilterChange('SKU', e.target.value)}
+                    value={filterValue || ''}
+                    onChange={(e) => setFilter(e.target.value || undefined)}
                 />
             </Box>
         </div>

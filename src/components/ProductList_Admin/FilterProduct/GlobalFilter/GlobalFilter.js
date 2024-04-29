@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import styles from './GlobalFilterProduct.scss';
+import styles from './GlobalFilter.scss';
 import { Box } from '@mui/joy';
 
 const cx = classNames.bind(styles);
@@ -11,7 +11,7 @@ const GlobalFilter = ({ filter, setFilter }) => {
                 <input
                     className={cx('global-filter__input')}
                     type="text"
-                    placeholder="Search your SKU"
+                    placeholder="Search your products"
                     value={filter || ''}
                     onChange={(e) => setFilter(e.target.value)}
                 />
