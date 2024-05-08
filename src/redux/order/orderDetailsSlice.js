@@ -26,7 +26,7 @@ export const orderDetailsSlice = createSlice({
         });
         builder.addCase(getOrderDetails.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.order = action.payload;
+            state.order = action.payload.order;
             state.error = null;
         });
         builder.addCase(getOrderDetails.rejected, (state, action) => {

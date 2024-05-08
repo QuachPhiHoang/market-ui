@@ -11,7 +11,7 @@ function YourOrder({ data }) {
     return (
         <tr>
             <td className={cx('order__info__product__item')}>
-                <img src={data.image} alt="items" />
+                <img src={data?.image?.url} alt="items" />
                 <p>{`${data.name} ( ${data.quantity} item )`}</p>
             </td>
             <td className={cx('order__info__product__price')}>{`$${quantityPrice}.00`}</td>

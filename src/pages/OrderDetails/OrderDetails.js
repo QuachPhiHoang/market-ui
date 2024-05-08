@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Footer from '~/components/Footer';
@@ -10,48 +10,46 @@ import { getOrderDetails } from '~/redux/order/orderDetailsSlice';
 const cx = classNames.bind(styles);
 
 function OrderDetails() {
+    const { order } = useSelector((state) => state.orderDetails);
     const dispatch = useDispatch();
     const { id } = useParams();
-    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(getOrderDetails(id));
     }, [dispatch, id]);
 
-    const { order } = useSelector((state) => state.orderDetails);
-
     return (
         <div>
             <Header />
             <div className={cx('order-details')}>
-                <div className={cx('order-details__heading')}>Order #{order && order?.order?._id}</div>
+                <div className={cx('order-details__heading')}>Order #{order && order?._id}</div>
                 <div className={cx('order-details__container')}>
                     <div className={cx('order-details__container__shipping-info')}>
                         <p className={cx('order-details__container__shipping-info__title')}>Shipping Info</p>
                         <div className={cx('order-details__container__shipping-info__name')}>
                             <p>Name: </p>
-                            <span>{order && order?.order?.user?.username}</span>
+                            <span>{order && order?.user?.username}</span>
                         </div>
                         <div className={cx('order-details__container__shipping-info__phone')}>
                             <p>Phone: </p>
-                            <span>{order && order?.order?.shippingInfo?.phone}</span>
+                            <span>{order && order?.shippingInfo?.phone}</span>
                         </div>
                         <div className={cx('order-details__container__shipping-info__address')}>
                             <p>Address: </p>
                             <span>
                                 {order &&
-                                    `${order?.order?.shippingInfo?.address}, ${order?.order?.shippingInfo?.ward}, ${order?.order?.shippingInfo?.district}, ${order?.order?.shippingInfo?.city}`}
+                                    `${order?.shippingInfo?.address}, ${order?.shippingInfo?.ward}, ${order?.shippingInfo?.district}, ${order?.shippingInfo?.city}`}
                             </span>
                         </div>
                     </div>
                     <div className={cx('order-details__container__payment')}>
                         <p className={cx('order-details__container__payment__title')}>Payment</p>
                         <div className={cx('order-details__container__payment__info')}>
-                            {order?.order?.paymentInfo?.status === 'succeeded' ? 'PAID' : 'NOT PAID'}
+                            {order?.paymentInfo?.status === 'succeeded' ? 'PAID' : 'NOT PAID'}
                         </div>
                         <div className={cx('order-details__container__payment__amount')}>
                             <p>Amount:</p>
-                            <span>{order && order?.order?.totalPrice} $</span>
+                            <span>{order && order?.totalPrice} $</span>
                         </div>
                     </div>
                     <div className={cx('order-details__container__order-status')}>
@@ -59,25 +57,25 @@ function OrderDetails() {
                         <div
                             className={cx(
                                 `order-details__container__order-status__info ${
-                                    order?.order?.orderStatus === 'Processing' ? '' : 'active'
+                                    order?.orderStatus === 'Processing' ? '' : 'active'
                                 }`,
                             )}
                         >
-                            {order && order?.order?.orderStatus}
+                            {order && order?.orderStatus}
                         </div>
                     </div>
                     <div className={cx('order-details__container__order-items')}>
                         <p className={cx('order-details__container__order-items__title')}>Order Items</p>
                         <div className={cx('order-details__container__order-items__cart')}>
-                            {order &&
-                                order?.order?.orderItem.map((item) => (
+                            {Object.keys(order).length &&
+                                order?.orderItem.map((item) => (
                                     <div
                                         className={cx('order-details__container__order-items__cart__item')}
                                         key={item.product}
                                     >
                                         <img
                                             className={cx('order-details__container__order-items__cart__item__image')}
-                                            src={item.image}
+                                            src={item?.product?.images[0].url}
                                             alt={`item`}
                                         />
                                         <div className={cx('order-details__container__order-items__cart__item__name')}>

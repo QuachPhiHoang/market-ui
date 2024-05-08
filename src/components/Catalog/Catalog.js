@@ -79,7 +79,6 @@ function Catalog() {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [products]);
-    console.log('products', products);
 
     const handleRemoveCheck = () => {
         setCategory('');

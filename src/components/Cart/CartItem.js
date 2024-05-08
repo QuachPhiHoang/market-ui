@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import icons from '~/assets/icons';
 import styles from './Cart.scss';
-// import { updateItem, removeItem } from '~/redux/shopping/shopping';
 import { removeItemsFromCart, updateItemsFromCart } from '~/redux/cart/cartSlice';
 
 const cx = classNames.bind(styles);
@@ -40,6 +39,7 @@ function CartItem({ product }) {
     };
 
     const removeItems = () => {
+        console.log('products', products);
         dispatch(removeItemsFromCart(products));
     };
 
@@ -52,7 +52,11 @@ function CartItem({ product }) {
                             <img src={icons.close} alt="close" />
                         </td>
                         <td className={cx('cart__table__product__details')}>
-                            <img className={cx('cart__table__product__image')} src={product?.image} alt="cart-shop" />
+                            <img
+                                className={cx('cart__table__product__image')}
+                                src={product?.image.url}
+                                alt="cart-shop"
+                            />
                             <p
                                 className={cx('cart__table__product__name')}
                             >{`${product?.name} - (${product?.size} - ${product?.color})`}</p>

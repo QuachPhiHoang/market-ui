@@ -12,16 +12,17 @@ export const addItemsToCart = createAsyncThunk('addItem/Cart', async (obj, Thunk
         const { data } = await axiosInstance.get(`${'products/find/'}${obj.id}`);
         const cart = ThunkAPI.dispatch(
             addToCart({
-                product: data._id,
-                name: data.name,
-                price: data.price,
-                image: data.img,
-                stock: data.stock,
+                product: data.product._id,
+                name: data.product.name,
+                price: data.product.price,
+                image: data.product.images[0],
+                // stock: data.stock,
                 size: obj.size,
                 color: obj.color,
                 quantity: obj.quantity,
             }),
         );
+        console.log('cart', cart);
         localStorage.setItem('cartItems', JSON.stringify(ThunkAPI.getState().cart.cartItems));
         return cart;
     } catch (error) {
@@ -29,9 +30,9 @@ export const addItemsToCart = createAsyncThunk('addItem/Cart', async (obj, Thunk
     }
 });
 
-export const removeItemsFromCart = createAsyncThunk('removeItem/Cart', async (id, ThunkAPI) => {
+export const removeItemsFromCart = createAsyncThunk('removeItem/Cart', async (itemsToRemove, ThunkAPI) => {
     try {
-        const { data } = ThunkAPI.dispatch(removeFromCart(id));
+        const { data } = ThunkAPI.dispatch(removeFromCart(itemsToRemove));
         localStorage.setItem('cartItems', JSON.stringify(ThunkAPI.getState().cart.cartItems));
         return data;
     } catch (error) {
@@ -55,6 +56,7 @@ export const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action) => {
             const items = action.payload;
+            console.log('items', action.payload);
             const isItemExits = state.cartItems.find(
                 (i) => i.product === items.product && i.size === items.size && i.color === items.color,
             );

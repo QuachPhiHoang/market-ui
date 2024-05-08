@@ -13,6 +13,7 @@ import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { createOrder } from '~/redux/order/orderSlice';
+import { removeItemsFromCart } from '~/redux/cart/cartSlice';
 
 const cx = classNames.bind(styles);
 
@@ -27,12 +28,14 @@ function Payment() {
 
     const { cartItems } = useSelector((state) => state.cart);
     const { shippingInfo } = useSelector((state) => state.shipping);
-    const { user } = useSelector((state) => state.user.user);
+    const { user } = useSelector((state) => state.user);
     const { error } = useSelector((state) => state.order);
 
     const paymentData = {
         amount: Math.round(orderInfo.totalPrice * 100),
     };
+
+    console.log('cartItems', cartItems);
 
     const order = {
         shippingInfo,
@@ -54,16 +57,16 @@ function Payment() {
             };
             const { data } = await axiosInstance.post('payment/process', paymentData, config);
 
-            const client_secrec = data.client_secret;
+            const client_secret = data.client_secret;
 
             if (!stripe || !element) return;
 
-            const result = await stripe.confirmCardPayment(client_secrec, {
+            const result = await stripe.confirmCardPayment(client_secret, {
                 payment_method: {
                     card: element.getElement(CardNumberElement),
                     billing_details: {
-                        name: user.userName,
-                        email: user.email,
+                        name: user?.username,
+                        email: user?.email,
                         address: {
                             line1: shippingInfo.address,
                             city: `${shippingInfo.ward},${shippingInfo.district},${shippingInfo.city}`,
@@ -81,6 +84,9 @@ function Payment() {
                         status: result.paymentIntent.status,
                     };
                     dispatch(createOrder(order));
+                    cartItems.forEach((item) => {
+                        dispatch(removeItemsFromCart(item));
+                    });
                     toast.success('Paymen Success');
                     navigate('/success');
                 } else {
@@ -88,6 +94,7 @@ function Payment() {
                 }
             }
         } catch (error) {
+            console.log(error);
             payBtn.current = false;
             toast.error(error.response.data.message);
         }

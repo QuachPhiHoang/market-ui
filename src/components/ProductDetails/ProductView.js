@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Carousel from 'react-material-ui-carousel';
 import { useNavigate } from 'react-router-dom';
 import withRouter from '~/hooks/withRouter';
 
 import { addItemsToCart } from '~/redux/cart/cartSlice';
 
-import images from '~/assets/images';
+// import images from '~/assets/images';
 import icons from '~/assets/icons';
 
 import classNames from 'classnames/bind';
@@ -20,6 +20,7 @@ const cx = classNames.bind(styles);
 
 function ProductView({ product }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const options = {
         size: 'large',
@@ -27,19 +28,49 @@ function ProductView({ product }) {
         readOnly: true,
         precision: 0.5,
     };
-    // console.log(product);
-
-    const navigate = useNavigate();
 
     const [isActive, setIsActive] = useState(false);
-
-    // const [previewImg, setPreviewImg] = useState(products.img);
     const [color, setColor] = useState(undefined);
     const [size, setSize] = useState(undefined);
+    const [stock, setStock] = useState(null);
     const [quantity, setQuantity] = useState(1);
+    const [selectedColor, setSelectedColor] = useState(null);
+
+    const queryStockColorAndSize = () => {
+        if (product?.variants && product?.variants.length) {
+            const colorStockAndSize = product?.variants.reduce((acc, variant) => {
+                const { color, size, stock } = variant;
+                if (!acc[color.name]) {
+                    acc[color.name] = [];
+                }
+                // Kiểm tra xem size đã tồn tại trong mảng chưa, nếu chưa thì thêm vào
+
+                if (!acc[color.name].some((item) => item.size === size.name)) {
+                    acc[color.name].push({ size: size.name, stock });
+                }
+                return acc;
+            }, {});
+            return colorStockAndSize;
+        }
+    };
+
+    const stockByColorAndSize = queryStockColorAndSize();
+
+    const selectedColorStocks = selectedColor && stockByColorAndSize ? stockByColorAndSize[selectedColor] : [];
+    const handleColorSelect = (selectedColor) => {
+        setSelectedColor(selectedColor);
+        setColor(selectedColor);
+        setSize(undefined); // Set size to undefined when selecting a new color
+        setQuantity(1);
+    };
+    const handleSize = (item) => {
+        setSize(item);
+        const variant = selectedColorStocks.find((variant) => variant.size === item);
+        setStock(variant.stock);
+    };
 
     const increaseQuantity = () => {
-        if (product.stock <= quantity) return;
+        if (stock <= quantity) return;
         const qty = quantity + 1;
         setQuantity(qty);
     };
@@ -57,7 +88,7 @@ function ProductView({ product }) {
         }
 
         if (size === undefined) {
-            alert.warning('Please select a size');
+            toast.warning('Please select a size');
             return false;
         }
         return true;
@@ -83,7 +114,7 @@ function ProductView({ product }) {
                 <div className={cx(`product__details__sale ${Number(product.sale) === 0 ? '' : 'active'}`)}>
                     <p className={cx('product__details__sale__info')}>{product.sale}%</p>
                 </div>
-                <Carousel autoPlay className={cx('product__details__images__main')}>
+                <Carousel autoPlay interval={3000} className={cx('product__details__images__main')}>
                     {product.images &&
                         product?.images.map((item, index) => (
                             <div key={item._id}>
@@ -110,82 +141,93 @@ function ProductView({ product }) {
                     ) : null}
                 </div>
                 <div className={cx('product__details__description__description')}>{`Description: ${product.desc}`}</div>
-                <div className={cx('product__details__color')}>
-                    <label className={cx('product__details__color__title')}>Select Colors:</label>
-                    {product.colors &&
-                        product.colors.map((item, index) => (
-                            <div
-                                key={index}
-                                className={cx(`product__details__color__list ${color === item ? 'active' : ''}`)}
-                                onClick={() => setColor(item)}
-                            >
-                                <div className={cx(`product__details__color__circle bg-${item}`)}></div>
-                            </div>
-                        ))}
-                </div>
-                <div className={cx('product__details__size')}>
-                    <div className={cx('product__details__size__dropdown')} onClick={() => setIsActive(!isActive)}>
-                        <p className={cx('product__details__size__dropdown__select')}>
-                            {size === undefined ? 'Select Size' : size}
-                        </p>
-                        <img src={icons.arrow} alt="arrow" />
-                    </div>
-                    {isActive && (
-                        <div className={cx('product__details__size__dropdown__list')}>
-                            {product.size.map((item, index) => (
+                {product?.variants?.length ? (
+                    <>
+                        <div className={cx('product__details__color')}>
+                            <label className={cx('product__details__color__title')}>Select Colors:</label>
+                            {Object.keys(stockByColorAndSize).map((item, index) => (
                                 <div
                                     key={index}
-                                    className={cx('product__details__size__dropdown__item')}
-                                    onClick={() => {
-                                        setSize(item);
-                                        setIsActive(false);
-                                    }}
+                                    className={cx(
+                                        `product__details__color__list ${selectedColor === item ? 'active' : ''}`,
+                                    )}
+                                    onClick={() => handleColorSelect(item)}
                                 >
-                                    <p className={cx('product__details__size__dropdown__item__size')}>{item}</p>
+                                    <div className={cx(`product__details__color__circle bg-${item}`)}></div>
                                 </div>
                             ))}
                         </div>
-                    )}
-                </div>
-
-                <div className={cx('product__details__quantity')}>
-                    <label className={cx('product__details__quantity__title')}>Quantity:</label>
-                    <div className={cx('product__details__quantity__btn')}>
-                        <div
-                            className={cx('product__details__quantity__btn__minus')}
-                            onClick={() => decreaseQuantity()}
-                        >
-                            -
+                        <div className={cx('product__details__size')}>
+                            <div
+                                className={cx('product__details__size__dropdown')}
+                                onClick={() => setIsActive(!isActive)}
+                            >
+                                <p className={cx('product__details__size__dropdown__select')}>
+                                    {size === undefined ? 'Select Size' : size}
+                                </p>
+                                <img src={icons.arrow} alt="arrow" />
+                            </div>
+                            {isActive && (
+                                <div className={cx('product__details__size__dropdown__list')}>
+                                    {selectedColorStocks.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className={cx('product__details__size__dropdown__item')}
+                                            onClick={() => {
+                                                handleSize(item.size);
+                                                setIsActive(false);
+                                            }}
+                                        >
+                                            <p className={cx('product__details__size__dropdown__item__size')}>
+                                                {item.size}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
-                    </div>
-                    <div className={cx('product__details__quantity__input')}>{quantity}</div>
-                    <div className={cx('product__details__quantity__btn')}>
-                        <div className={cx('product__details__quantity__btn__plus')} onClick={() => increaseQuantity()}>
-                            +
+                        <div className={cx('product__details__quantity')}>
+                            <label className={cx('product__details__quantity__title')}>Quantity:</label>
+                            <div className={cx('product__details__quantity__btn')}>
+                                <div
+                                    className={cx('product__details__quantity__btn__minus')}
+                                    onClick={() => decreaseQuantity()}
+                                >
+                                    -
+                                </div>
+                            </div>
+                            <div className={cx('product__details__quantity__input')}>{quantity}</div>
+                            <div className={cx('product__details__quantity__btn')}>
+                                <div
+                                    className={cx('product__details__quantity__btn__plus')}
+                                    onClick={() => increaseQuantity()}
+                                >
+                                    +
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div className={cx('product__details__stock')}>
-                    <label className={cx('product__details__stock__title')}>Status:</label>
-                    <p className={cx(`product__details__stock__info bg-${product.stock < 1 ? 'red' : 'green'}`)}>
-                        {product.stock < 1 ? 'OutOfStock' : 'InStock'}
-                    </p>
-                </div>
+                        <div className={cx('product__details__stock')}>
+                            <label className={cx('product__details__stock__title')}>Status:</label>
+                            {stock !== null ? (
+                                <p className={cx(`product__details__stock__info bg-${stock < 1 ? 'Red' : 'Green'}`)}>
+                                    {stock < 1 ? 'OutOfStock' : 'InStock'}
+                                </p>
+                            ) : null}
+                        </div>
+                        <div className={cx('product__details__btn')}>
+                            <Button primary className={cx('product__details__btn__add')} onClick={() => addToCart()}>
+                                ADD TO CART
+                            </Button>
+                            <Button primary className={cx('product__details__btn__buy')} onClick={() => goToCart()}>
+                                BUY NOW
+                            </Button>
+                        </div>
+                    </>
+                ) : (
+                    <p className={cx('product__details__coming')}>Coming Soon...</p>
+                )}
 
-                <div className={cx('product__details__btn')}>
-                    <Button
-                        disable={product.stock < 1 ? true : false}
-                        primary
-                        className={cx('product__details__btn__add')}
-                        onClick={() => addToCart()}
-                    >
-                        ADD TO CART
-                    </Button>
-                    <Button primary className={cx('product__details__btn__buy')} onClick={() => goToCart()}>
-                        BUY NOW
-                    </Button>
-                </div>
                 <div className={cx('product__details__info')}>
                     <p>
                         <strong>Category:</strong>Women, Polo, Casual

@@ -17,7 +17,7 @@ const cx = classNames.bind(styles);
 function ProductDetails() {
     const [toggleState, setToggleState] = useState(1);
     const dispatch = useDispatch();
-    const { product, status, error } = useSelector((state) => state.productDetailSlice.product);
+    const { product } = useSelector((state) => state.productDetailSlice);
     const { success } = useSelector((state) => state.reviews);
     const [openModalReviews, setOpenModalReviews] = useState(false);
 
